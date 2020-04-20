@@ -43,13 +43,13 @@ public class ReadXMLFile {
                     Node n = children.item(j);
                     if (n.getNodeType() == Node.ELEMENT_NODE) {
                         Element etmp = (Element) n;
-                        if (etmp.getNodeName() == "processID") {
+                        if (etmp.getNodeName().equals("processID")) {
                             instruction.setProcessID(Integer.parseInt(etmp.getTextContent()));
                         }
-                        if (etmp.getNodeName() == "operation") {
+                        if (etmp.getNodeName().equals("operation")) {
                             instruction.setOperation(etmp.getTextContent());
                         }
-                        if (etmp.getNodeName() == "address") {
+                        if (etmp.getNodeName().equals("address")) {
                             instruction.setAdress(Integer.parseInt(etmp.getTextContent()));
                         }
 

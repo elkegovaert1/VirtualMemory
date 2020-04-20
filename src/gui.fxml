@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="600.0" prefWidth="981.0">
+         <children>
+            <TitledPane fx:id="Algemeen" animated="false" layoutX="737.0" layoutY="15.0" prefHeight="127.0" prefWidth="230.0" text="Algemeen">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="10.0" layoutY="10.0" text="Timer" />
+                        <Label fx:id="timerLabel" layoutX="125.0" layoutY="10.0" text="---" />
+                        <Label layoutX="10.0" layoutY="40.0" text="Write naar RAM" />
+                        <Label layoutX="10.0" layoutY="70.0" text="Read van RAM" />
+                        <Label fx:id="aantalWritesLabel" layoutX="125.0" layoutY="40.0" text="---" />
+                        <Label fx:id="aantalReadsLabel" layoutX="125.0" layoutY="70.0" text="---" />
+                     </children>
+                  </AnchorPane>
+              </content>
+            </TitledPane>
+            <TitledPane fx:id="Net" animated="false" layoutX="737.0" layoutY="175.0" prefHeight="180.0" prefWidth="230.0" text="Net uitgevoerde instructie">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="10.0" layoutY="10.0" text="Instructie" />
+                        <Label layoutX="10.0" layoutY="40.0" text="Virtueel adres" />
+                        <Label layoutX="10.0" layoutY="70.0" text="Reëel adres" />
+                        <Label layoutX="10.0" layoutY="100.0" text="Frame" />
+                        <Label layoutX="10.0" layoutY="130.0" text="Offset" />
+                        <Label fx:id="netinstructieLabel" layoutX="125.0" layoutY="10.0" text="---" />
+                        <Label fx:id="netvirtadrLabel" layoutX="125.0" layoutY="40.0" text="---" />
+                        <Label fx:id="netreadrLabel" layoutX="125.0" layoutY="70.0" text="---" />
+                        <Label fx:id="netframeLabel" layoutX="125.0" layoutY="100.0" text="---" />
+                        <Label fx:id="netoffsetlabel" layoutX="125.0" layoutY="130.0" text="---" />
+                     </children></AnchorPane>
+              </content>
+            </TitledPane>
+            <TitledPane fx:id="Volg" animated="false" layoutX="737.0" layoutY="385.0" prefHeight="180.0" prefWidth="230.0" text="Volgende instructie">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <Label layoutX="10.0" layoutY="10.0" text="Instructie" />
+                        <Label layoutX="10.0" layoutY="40.0" text="Virtueel adres" />
+                        <Label layoutX="10.0" layoutY="70.0" text="Reëel adres" />
+                        <Label layoutX="10.0" layoutY="100.0" text="Frame" />
+                        <Label layoutX="10.0" layoutY="130.0" text="Offset" />
+                        <Label fx:id="volginstructieLabel" layoutX="125.0" layoutY="10.0" text="---" />
+                        <Label fx:id="volgvirtadrLabel" layoutX="125.0" layoutY="40.0" text="---" />
+                        <Label fx:id="volgreadrLabel" layoutX="125.0" layoutY="70.0" text="---" />
+                        <Label fx:id="volgframeLabel" layoutX="125.0" layoutY="100.0" text="---" />
+                        <Label fx:id="volgoffsetLabel" layoutX="122.0" layoutY="130.0" text="---" />
+                     </children></AnchorPane>
+              </content>
+            </TitledPane>
+            <Button fx:id="execallButton" layoutX="49.0" layoutY="537.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Execute all" />
+            <Button fx:id="execoneButton" layoutX="219.0" layoutY="537.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Execute one by one" />
+            <Button fx:id="restartButton" layoutX="573.0" layoutY="537.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Restart" />
+            <TitledPane fx:id="RAM" animated="false" layoutX="467.0" layoutY="15.0" prefHeight="475.0" prefWidth="256.0" text="RAM">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="425.0" prefWidth="298.0">
+                     <children>
+                        <TableView prefHeight="450.0" prefWidth="253.0">
+                          <columns>
+                            <TableColumn fx:id="RAMFrameCol" prefWidth="50.0" text="Frame" />
+                            <TableColumn fx:id="RAMpidCol" prefWidth="100.0" text="PID" />
+                              <TableColumn fx:id="RAMpagenrCol" prefWidth="102.4000030517578" text="Pagenumber" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
+              </content>
+            </TitledPane>
+            <TitledPane fx:id="PT" animated="false" layoutX="49.0" layoutY="15.0" prefHeight="475.0" prefWidth="391.0" text="Page Table">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="391.0" prefWidth="349.0">
+                     <children>
+                        <TableView prefHeight="450.0" prefWidth="390.0">
+                          <columns>
+                            <TableColumn fx:id="PTPageCol" prefWidth="50.0" text="Page" />
+                            <TableColumn fx:id="PTPBCol" text="Present bit" />
+                              <TableColumn fx:id="PTMBCol" text="Modify bit" />
+                              <TableColumn fx:id="PTLATCol" prefWidth="100.0" text="Last acces time" />
+                              <TableColumn fx:id="PTFrameCol" text="Frame" />
+                          </columns>
+                        </TableView>
+                     </children></AnchorPane>
+              </content>
+            </TitledPane>
+         </children></AnchorPane>
+   </children>
+   <columnConstraints>
+      <ColumnConstraints />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints />
+   </rowConstraints>
+</GridPane>
