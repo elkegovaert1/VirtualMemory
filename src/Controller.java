@@ -7,7 +7,6 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 public class Controller {
 
@@ -119,7 +118,7 @@ public class Controller {
 
     //address of next instruction to be selected out of virtual memory
     //Start at instruction 0;
-    private int virtualAddressNextInstruction = 0;
+    private int indexNextInstruction = 0;
 
     //When starting the application all the fill all the Lists
     public void initializeList1(List<Instruction> instructions) {
@@ -170,25 +169,52 @@ public class Controller {
         timer = timer + 1;
 
         //execute next instruction
-        int virtualAddressInstruction = virtualAddressNextInstruction;
+        int virtualAddressInstruction = indexNextInstruction;
         Instruction instruction = instructions1.get(virtualAddressInstruction);
 
         String operation = instruction.getOperation();
         int processID = instruction.getProcessID();
-        int virtualAddress = instruction.getAdress();
+        int virtualAdress = instruction.getAdress();
 
         //Different operations are possible
         if(operation.equals("Start")){
             startProcess(processID);
+
+            //show labels current instruction
+            netinstructieLabel.setText(operation);
+            netvirtadrLabel.setText("Geen");
+            netframeLabel.setText("Geen");
+            netoffsetlabel.setText("Geen");
+            netreadrLabel.setText("Geen");
         }
         else if(operation.equals("Read")){
 
+
+
+            //show labels current instruction
+            netinstructieLabel.setText(operation);
+            netvirtadrLabel.setText("Geen");
+            netframeLabel.setText("Geen");
+            netoffsetlabel.setText("Geen");
+            netreadrLabel.setText("Geen");
         }
         else if(operation.equals("Write")){
 
+            //show labels current instruction
+            netinstructieLabel.setText(operation);
+            netvirtadrLabel.setText("Geen");
+            netframeLabel.setText("Geen");
+            netoffsetlabel.setText("Geen");
+            netreadrLabel.setText("Geen");
         }
         else if(operation.equals("finished")){
 
+            //show labels current instruction
+            netinstructieLabel.setText(operation);
+            netvirtadrLabel.setText("Geen");
+            netframeLabel.setText("Geen");
+            netoffsetlabel.setText("Geen");
+            netreadrLabel.setText("Geen");
         }
 
 
@@ -200,10 +226,6 @@ public class Controller {
 
         //show number of reads from RAM
         aantalReadsLabel.setText(String.valueOf(readsFromRAM));
-
-        //show labels current instruction
-        netinstructieLabel.setText(operation);
-        netvirtadrLabel.setText(String.valueOf(virtualAddressInstruction));
 
         //show RAM table
         ObservableList<Page> ramTable = FXCollections.observableArrayList();
@@ -222,6 +244,8 @@ public class Controller {
         pageTableOfProcess.addAll(table);
         pageTable.setItems(pageTableOfProcess);
 
+        indexNextInstruction++;
+
     }
 
     @FXML //Execute one instruction and update the view
@@ -229,13 +253,6 @@ public class Controller {
 
     @FXML //Execute one instruction and update the view
     void restart(ActionEvent event) {}
-
-    /*
-    public void update(Observable arg0, Object arg1) { // Called from the Model
-        tekstAriaAfdelingen.setText(al.toString());
-        tekstAriaJuryLeden.setText(jl.toString());
-        tekenGrafiek();
-    }*/
 
     public void startProcess(int processId) {
 
