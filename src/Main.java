@@ -16,14 +16,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("gui.fxml"));
+
+        FXMLLoader loader = new FXMLLoader();
+        loader.setLocation(getClass().getResource("gui.fxml"));
+        Parent root = loader.load();
         primaryStage.setTitle("Virtual Memory");
         primaryStage.setScene(new Scene(root, 1200, 600));
         primaryStage.show();
-    }
 
-    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
-        launch(args);
+        Controller controller = loader.getController();
 
         //xmlfiles inlezen
         ReadXMLFile readXMLFile = new ReadXMLFile();
@@ -31,6 +32,14 @@ public class Main extends Application {
         List<Instruction> instructions2 = readXMLFile.leesInstructions("Instructions_20000_4.xml");
         List<Instruction> instructions3 = readXMLFile.leesInstructions("Instructions_20000_20.xml");
 
+        controller.initializeList1(instructions1);
+        controller.initializeList2(instructions2);
+        controller.initializeList3(instructions3);
+        ;
+    }
+
+    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException {
+        launch(args);
     }
 
 }
