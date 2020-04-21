@@ -200,12 +200,31 @@ public class Controller {
         }
         else if(operation.equals("Write")){
 
+            int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
+            int offsetInPage = virtualAdress-pageNumber*4096;
+
+            //See if page is in RAM
+            List<TableEntry> pageTable = ram.getPageTables().get(processID);
+
+            boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
+
+            int frameNumber = -1;
+            int realAdress = -1;
+
+            if(pageIsInRAM){
+                frameNumber = pageTable.get(pageNumber).getFrameNumber();
+                realAdress = 4096*frameNumber + offsetInPage;
+            }
+            else{
+                //via RLU load page in RAM and remove one
+            }
+
             //show labels current instruction
             netinstructieLabel.setText(operation);
-            netvirtadrLabel.setText("Geen");
-            netframeLabel.setText("Geen");
-            netoffsetlabel.setText("Geen");
-            netreadrLabel.setText("Geen");
+            netvirtadrLabel.setText(String.valueOf(virtualAdress));
+            netframeLabel.setText(String.valueOf(frameNumber));
+            netoffsetlabel.setText(String.valueOf(offsetInPage));
+            netreadrLabel.setText(String.valueOf(realAdress));
         }
         else if(operation.equals("finished")){
 
@@ -288,12 +307,12 @@ public class Controller {
                         }
                     }
 
-                    ram.getFrameArray()[freeFrameNumber]=new Page(freeFrameNumber+1,processId,i+1);
-                    pageTable.add(new TableEntry(i+1, true, false, -1, freeFrameNumber+1));
+                    ram.getFrameArray()[freeFrameNumber]=new Page(freeFrameNumber,processId,i);
+                    pageTable.add(new TableEntry(i, true, false, -1, freeFrameNumber));
 
                 }
                 else{
-                    pageTable.add(new TableEntry(i+1,false, false, -1, 0));
+                    pageTable.add(new TableEntry(i,false, false, -1, -1));
                 }
 
 
@@ -307,4 +326,7 @@ public class Controller {
         }
     }
 
+    public int givePageNumberOfVirtualAdress(int virtualAdress) {
+        return (int) Math.floor(virtualAdress/4096);
+    }
 }
