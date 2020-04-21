@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
    <children>
       <AnchorPane prefHeight="593.0" prefWidth="1100.0">
          <children>
@@ -55,9 +56,9 @@
                      </children></AnchorPane>
               </content>
             </TitledPane>
-            <Button fx:id="execallButton" layoutX="18.0" layoutY="537.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Execute all" />
-            <Button fx:id="execoneButton" layoutX="193.0" layoutY="537.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Execute one by one" />
-            <Button fx:id="restartButton" layoutX="671.0" layoutY="537.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Restart" />
+            <Button fx:id="execallButton" layoutX="18.0" layoutY="537.0" mnemonicParsing="false" onAction="#executeAll" prefHeight="40.0" prefWidth="150.0" text="Execute all" />
+            <Button fx:id="execoneButton" layoutX="193.0" layoutY="537.0" mnemonicParsing="false" onAction="#executeOneInstruction" prefHeight="40.0" prefWidth="150.0" text="Execute one by one" />
+            <Button fx:id="restartButton" layoutX="671.0" layoutY="537.0" mnemonicParsing="false" onAction="#restart" prefHeight="40.0" prefWidth="150.0" text="Restart" />
             <TitledPane fx:id="RAM" animated="false" layoutX="514.0" layoutY="15.0" prefHeight="498.0" prefWidth="308.0" text="RAM">
               <content>
                 <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="425.0" prefWidth="298.0">
