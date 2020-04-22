@@ -95,6 +95,15 @@ public class Controller {
     @FXML
     public TableColumn PTFrameCol;
 
+    @FXML
+    private MenuButton panelChoice;
+
+    //List global of instructions;
+    List<Instruction> instructionsGlob;
+
+    //Integer for the amount of instruction
+    private int amountOfInstruction = 0;
+
 
     //List 1 of instructions
     List<Instruction> instructions1;
@@ -385,6 +394,27 @@ public class Controller {
         pageTable.refresh();
         //pageTable.setItems(pageTableOfProcess);
 
+    }
+
+    @FXML
+    void choice2000020(ActionEvent event) {
+        panelChoice.setText("20000_20");
+        amountOfInstruction = 20000;
+        instructionsGlob = instructions3;
+    }
+
+    @FXML
+    void choice200004(ActionEvent event) {
+        panelChoice.setText("20000_4");
+        amountOfInstruction = 20000;
+        instructionsGlob = instructions2;
+    }
+
+    @FXML
+    void choice303(ActionEvent event) {
+        panelChoice.setText("30_3");
+        amountOfInstruction = 20;
+        instructionsGlob = instructions1;
     }
 
     public void startProcess(int processId) {

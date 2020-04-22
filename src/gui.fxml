@@ -1,100 +1,117 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.lang.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
-   <children>
-      <AnchorPane prefHeight="593.0" prefWidth="1100.0">
-         <children>
-            <TitledPane fx:id="Algemeen" animated="false" layoutX="842.0" layoutY="15.0" prefHeight="135.0" prefWidth="230.0" text="Algemeen">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="200.0">
-                     <children>
-                        <Label layoutX="10.0" layoutY="10.0" text="Timer" />
-                        <Label fx:id="timerLabel" layoutX="140.0" layoutY="10.0" text="---" />
-                        <Label layoutX="10.0" layoutY="40.0" text="Write naar RAM" />
-                        <Label layoutX="10.0" layoutY="70.0" text="Read van RAM" />
-                        <Label fx:id="aantalWritesLabel" layoutX="140.0" layoutY="40.0" text="---" />
-                        <Label fx:id="aantalReadsLabel" layoutX="140.0" layoutY="70.0" text="---" />
-                     </children>
-                  </AnchorPane>
-              </content>
-            </TitledPane>
-            <TitledPane fx:id="Net" animated="false" layoutX="842.0" layoutY="176.0" prefHeight="190.0" prefWidth="230.0" text="Net uitgevoerde instructie">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Label layoutX="10.0" layoutY="10.0" text="Instructie" />
-                        <Label layoutX="10.0" layoutY="40.0" text="Virtueel adres" />
-                        <Label layoutX="10.0" layoutY="70.0" text="Reëel adres" />
-                        <Label layoutX="10.0" layoutY="100.0" text="Frame" />
-                        <Label layoutX="10.0" layoutY="130.0" text="Offset" />
-                        <Label fx:id="netinstructieLabel" layoutX="140.0" layoutY="10.0" text="---" />
-                        <Label fx:id="netvirtadrLabel" layoutX="140.0" layoutY="40.0" text="---" />
-                        <Label fx:id="netreadrLabel" layoutX="140.0" layoutY="70.0" text="---" />
-                        <Label fx:id="netframeLabel" layoutX="140.0" layoutY="100.0" text="---" />
-                        <Label fx:id="netoffsetlabel" layoutX="140.0" layoutY="130.0" text="---" />
-                     </children></AnchorPane>
-              </content>
-            </TitledPane>
-            <TitledPane fx:id="Volg" animated="false" layoutX="842.0" layoutY="386.0" prefHeight="190.0" prefWidth="230.0" text="Volgende instructie">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                     <children>
-                        <Label layoutX="10.0" layoutY="10.0" text="Instructie" />
-                        <Label layoutX="10.0" layoutY="40.0" text="Virtueel adres" />
-                        <Label layoutX="10.0" layoutY="70.0" text="Reëel adres" />
-                        <Label layoutX="10.0" layoutY="100.0" text="Frame" />
-                        <Label layoutX="10.0" layoutY="130.0" text="Offset" />
-                        <Label fx:id="volginstructieLabel" layoutX="140.0" layoutY="10.0" text="---" />
-                        <Label fx:id="volgvirtadrLabel" layoutX="140.0" layoutY="40.0" text="---" />
-                        <Label fx:id="volgreadrLabel" layoutX="140.0" layoutY="70.0" text="---" />
-                        <Label fx:id="volgframeLabel" layoutX="140.0" layoutY="100.0" text="---" />
-                        <Label fx:id="volgoffsetLabel" layoutX="140.0" layoutY="130.0" text="---" />
-                     </children></AnchorPane>
-              </content>
-            </TitledPane>
-            <Button fx:id="execallButton" layoutX="18.0" layoutY="537.0" mnemonicParsing="false" onAction="#executeAll" prefHeight="40.0" prefWidth="150.0" text="Execute all" />
-            <Button fx:id="execoneButton" layoutX="193.0" layoutY="537.0" mnemonicParsing="false" onAction="#executeOneInstruction" prefHeight="40.0" prefWidth="150.0" text="Execute one by one" />
-            <Button fx:id="restartButton" layoutX="671.0" layoutY="537.0" mnemonicParsing="false" onAction="#restart" prefHeight="40.0" prefWidth="150.0" text="Restart" />
-            <TitledPane fx:id="RAM" animated="false" layoutX="514.0" layoutY="15.0" prefHeight="498.0" prefWidth="308.0" text="RAM">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="425.0" prefWidth="298.0">
-                     <children>
-                        <TableView fx:id="RAMTable" layoutX="6.0" layoutY="6.6" prefHeight="466.0" prefWidth="258.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
-                          <columns>
-                            <TableColumn fx:id="RAMFrameCol" prefWidth="70.59997427463531" text="Frame" />
-                            <TableColumn fx:id="RAMpidCol" prefWidth="89.40001678466797" text="PID" />
-                              <TableColumn fx:id="RAMpagenrCol" prefWidth="122.39997863769531" text="Pagenumber" />
-                          </columns>
-                        </TableView>
-                     </children></AnchorPane>
-              </content>
-            </TitledPane>
-            <TitledPane fx:id="PT" animated="false" layoutX="18.0" layoutY="15.0" prefHeight="498.0" prefWidth="477.0" text="Page Table">
-              <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="391.0" prefWidth="349.0">
-                     <children>
-                        <TableView fx:id="pageTable" layoutX="5.0" layoutY="2.0" prefHeight="466.0" prefWidth="466.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
-                          <columns>
-                            <TableColumn fx:id="PTPageCol" prefWidth="57.39999467134476" text="Page" />
-                            <TableColumn fx:id="PTPBCol" prefWidth="94.59997177124023" text="Present bit" />
-                              <TableColumn fx:id="PTMBCol" prefWidth="106.20002746582031" text="Modify bit" />
-                              <TableColumn fx:id="PTLATCol" prefWidth="126.80001831054688" text="Last acces time" />
-                              <TableColumn fx:id="PTFrameCol" prefWidth="65.20001220703125" text="Frame" />
-                          </columns>
-                        </TableView>
-                     </children></AnchorPane>
-              </content>
-            </TitledPane>
-         </children></AnchorPane>
-   </children>
-   <columnConstraints>
-      <ColumnConstraints />
-   </columnConstraints>
-   <rowConstraints>
-      <RowConstraints />
-   </rowConstraints>
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+    <children>
+        <AnchorPane prefHeight="628.0" prefWidth="1100.0">
+            <children>
+                <TitledPane fx:id="Algemeen" animated="false" layoutX="842.0" layoutY="15.0" prefHeight="135.0" prefWidth="230.0" text="Algemeen">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="200.0">
+                            <children>
+                                <Label layoutX="10.0" layoutY="10.0" text="Timer" />
+                                <Label fx:id="timerLabel" layoutX="140.0" layoutY="10.0" text="---" />
+                                <Label layoutX="10.0" layoutY="40.0" text="Write naar RAM" />
+                                <Label layoutX="10.0" layoutY="70.0" text="Read van RAM" />
+                                <Label fx:id="aantalWritesLabel" layoutX="140.0" layoutY="40.0" text="---" />
+                                <Label fx:id="aantalReadsLabel" layoutX="140.0" layoutY="70.0" text="---" />
+                            </children>
+                        </AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane fx:id="Net" animated="false" layoutX="842.0" layoutY="176.0" prefHeight="210.0" prefWidth="230.0" text="Net uitgevoerde instructie">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <Label layoutX="10.0" layoutY="160.0" text="Instructie" />
+                                <Label layoutX="10.0" layoutY="40.0" text="Virtueel adres" />
+                                <Label layoutX="10.0" layoutY="70.0" text="Reëel adres" />
+                                <Label layoutX="10.0" layoutY="100.0" text="Frame" />
+                                <Label layoutX="10.0" layoutY="130.0" text="Offset" />
+                                <Label layoutX="10.0" layoutY="10.0" text="ProcessID" />
+                                <Label fx:id="netinstructieLabel" layoutX="140.0" layoutY="160.0" text="---" />
+                                <Label fx:id="netvirtadrLabel" layoutX="140.0" layoutY="40.0" text="---" />
+                                <Label fx:id="netreadrLabel" layoutX="140.0" layoutY="70.0" text="---" />
+                                <Label fx:id="netframeLabel" layoutX="140.0" layoutY="100.0" text="---" />
+                                <Label fx:id="netoffsetlabel" layoutX="140.0" layoutY="130.0" text="---" />
+                                <Label fx:id="netProcessIDLabel" layoutX="140.0" layoutY="10.0" text="---" />
+                            </children></AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane fx:id="Volg" animated="false" layoutX="842.0" layoutY="412.0" prefHeight="190.0" prefWidth="230.0" text="Volgende instructie">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                            <children>
+                                <Label layoutX="10.0" layoutY="10.0" text="Instructie" />
+                                <Label layoutX="10.0" layoutY="40.0" text="Virtueel adres" />
+                                <Label layoutX="10.0" layoutY="70.0" text="Reëel adres" />
+                                <Label layoutX="10.0" layoutY="100.0" text="Frame" />
+                                <Label layoutX="10.0" layoutY="130.0" text="Offset" />
+                                <Label fx:id="volginstructieLabel" layoutX="140.0" layoutY="10.0" text="---" />
+                                <Label fx:id="volgvirtadrLabel" layoutX="140.0" layoutY="40.0" text="---" />
+                                <Label fx:id="volgreadrLabel" layoutX="140.0" layoutY="70.0" text="---" />
+                                <Label fx:id="volgframeLabel" layoutX="140.0" layoutY="100.0" text="---" />
+                                <Label fx:id="volgoffsetLabel" layoutX="140.0" layoutY="130.0" text="---" />
+                            </children></AnchorPane>
+                    </content>
+                </TitledPane>
+                <Button fx:id="execallButton" layoutX="18.0" layoutY="557.0" mnemonicParsing="false" onAction="#executeAll" prefHeight="40.0" prefWidth="150.0" text="Execute all" />
+                <Button fx:id="execoneButton" layoutX="193.0" layoutY="557.0" mnemonicParsing="false" onAction="#executeOneInstruction" prefHeight="40.0" prefWidth="150.0" text="Execute one by one" />
+                <Button fx:id="restartButton" layoutX="672.0" layoutY="557.0" mnemonicParsing="false" onAction="#restart" prefHeight="40.0" prefWidth="150.0" text="Restart" />
+                <MenuButton fx:id="panelChoice" layoutX="368.0" layoutY="557.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Kies uw selectie" textAlignment="CENTER">
+                    <items>
+                        <MenuItem mnemonicParsing="false" onAction="#choice303" text="30_3" />
+                        <MenuItem mnemonicParsing="false" onAction="#choice200004" text="20000_4" />
+                        <MenuItem mnemonicParsing="false" onAction="#choice2000020" text="20000_20" />
+                    </items>
+                </MenuButton>
+                <TitledPane fx:id="RAM" animated="false" layoutX="514.0" layoutY="15.0" prefHeight="498.0" prefWidth="308.0" text="RAM">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="425.0" prefWidth="298.0">
+                            <children>
+                                <TableView fx:id="RAMTable" layoutX="6.0" layoutY="6.6" prefHeight="466.0" prefWidth="258.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+                                    <columns>
+                                        <TableColumn fx:id="RAMFrameCol" prefWidth="70.59997427463531" text="Frame" />
+                                        <TableColumn fx:id="RAMpidCol" prefWidth="89.40001678466797" text="PID" />
+                                        <TableColumn fx:id="RAMpagenrCol" prefWidth="122.39997863769531" text="Pagenumber" />
+                                    </columns>
+                                </TableView>
+                            </children></AnchorPane>
+                    </content>
+                </TitledPane>
+                <TitledPane fx:id="PT" animated="false" layoutX="18.0" layoutY="15.0" prefHeight="498.0" prefWidth="477.0" text="Page Table">
+                    <content>
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="391.0" prefWidth="349.0">
+                            <children>
+                                <TableView fx:id="pageTable" layoutX="5.0" layoutY="2.0" prefHeight="466.0" prefWidth="466.0" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+                                    <columns>
+                                        <TableColumn fx:id="PTPageCol" prefWidth="57.39999467134476" text="Page" />
+                                        <TableColumn fx:id="PTPBCol" prefWidth="94.59997177124023" text="Present bit" />
+                                        <TableColumn fx:id="PTMBCol" prefWidth="106.20002746582031" text="Modify bit" />
+                                        <TableColumn fx:id="PTLATCol" prefWidth="126.80001831054688" text="Last acces time" />
+                                        <TableColumn fx:id="PTFrameCol" prefWidth="65.20001220703125" text="Frame" />
+                                    </columns>
+                                </TableView>
+                            </children></AnchorPane>
+                    </content>
+                </TitledPane>
+            </children></AnchorPane>
+    </children>
+    <columnConstraints>
+        <ColumnConstraints />
+    </columnConstraints>
+    <rowConstraints>
+        <RowConstraints />
+    </rowConstraints>
 </GridPane>
