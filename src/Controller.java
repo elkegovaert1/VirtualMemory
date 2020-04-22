@@ -300,7 +300,7 @@ public class Controller {
 
             //Via LRU remove pages from all processes in RAM
             //Replace from all processes the same amount of pages to make free place for new process
-            placementViaLRU(pagesToRemoveFromRAMPerProcess);
+            internalReplacementViaLRU(pagesToRemoveFromRAMPerProcess);
 
 
             //create new page table and put each page in RAM
@@ -347,7 +347,7 @@ public class Controller {
     }
 
     //when new process comes in from all the processes a same amount has to be removed of evry process
-    public void placementViaLRU(int numberOfFramesToRemovePerProcess){
+    public void internalReplacementViaLRU(int numberOfFramesToRemovePerProcess){
 
         System.out.println(numberOfFramesToRemovePerProcess);
 
@@ -374,24 +374,31 @@ public class Controller {
         List<TableEntry> pageTable = ram.getPageTables().get(processID);
 
         TableEntry leastRecentlyUsed = pageTable.get(0);
-        for(int i=0; i<pageTable.size(); i++) {
-            if(pageTable.get(i).isPresentBit()==true){
-                leastRecentlyUsed = pageTable.get(i);
+        boolean startFound = false;
+        int start = 0;
+        while(!startFound) {
+            if(pageTable.get(start).isPresentBit()){
+                leastRecentlyUsed = pageTable.get(start);
+                startFound = true;
+            }
+            else{
+                start++;
             }
         }
 
-        for(int i=1; i<pageTable.size(); i++){
+        for(int i=start; i<pageTable.size(); i++){
             if(leastRecentlyUsed.getLastAccessTime()>pageTable.get(i).getLastAccessTime()&&pageTable.get(i).isPresentBit()){
                 leastRecentlyUsed = pageTable.get(i);
             }
         }
 
-        //set present bit to false
-        leastRecentlyUsed.setPresentBit(false);
-
         //remove frame from RAM
         int frameNumberToRemove = leastRecentlyUsed.getFrameNumber();
         ram.getFrameArray()[frameNumberToRemove] = null;
+
+        //set present bit to false
+        leastRecentlyUsed.setPresentBit(false);
+        leastRecentlyUsed.setFrameNumber(-1);
 
     }
 
