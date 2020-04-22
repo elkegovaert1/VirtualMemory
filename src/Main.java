@@ -21,7 +21,7 @@ public class Main extends Application {
         loader.setLocation(getClass().getResource("gui.fxml"));
         Parent root = loader.load();
         primaryStage.setTitle("Virtual Memory");
-        primaryStage.setScene(new Scene(root, 1200, 600));
+        primaryStage.setScene(new Scene(root, 1100, 628));
         primaryStage.show();
 
         Controller controller = loader.getController();
