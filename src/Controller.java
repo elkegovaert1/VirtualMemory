@@ -33,6 +33,9 @@ public class Controller {
 
     //Labels for just performed instruction
     @FXML
+    public Label netProcessIDLabel;
+
+    @FXML
     public Label netinstructieLabel;
 
     @FXML
@@ -171,7 +174,6 @@ public class Controller {
         instructions3 = instructions;
     }
 
-
     @FXML //Execute one instruction and update the view
     void executeOneInstruction(ActionEvent event) {
         if(timer+1<instructions1.size()){
@@ -192,6 +194,7 @@ public class Controller {
             startProcess(processID);
 
             //show labels current instruction
+            netProcessIDLabel.setText(String.valueOf(processID));
             netinstructieLabel.setText(operation);
             netvirtadrLabel.setText("Geen");
             netframeLabel.setText("Geen");
@@ -242,6 +245,7 @@ public class Controller {
             }
 
             //show labels current instruction
+            netProcessIDLabel.setText(String.valueOf(processID));
             netinstructieLabel.setText(operation);
             netvirtadrLabel.setText(String.valueOf(virtualAdress));
             netframeLabel.setText(String.valueOf(frameNumber));
@@ -293,6 +297,7 @@ public class Controller {
             }
 
             //show labels current instruction
+            netProcessIDLabel.setText(String.valueOf(processID));
             netinstructieLabel.setText(operation);
             netvirtadrLabel.setText(String.valueOf(virtualAdress));
             netframeLabel.setText(String.valueOf(frameNumber));
@@ -304,6 +309,7 @@ public class Controller {
             finishProcess(processID);
 
             //show labels current instruction
+            netProcessIDLabel.setText(String.valueOf(processID));
             netinstructieLabel.setText(operation);
             netvirtadrLabel.setText("Geen");
             netframeLabel.setText("Geen");
@@ -348,8 +354,165 @@ public class Controller {
         }
     }
 
-    @FXML //Execute one instruction and update the view
-    void executeAll(ActionEvent event) {}
+    @FXML //Execute all instructions and update the view
+    void executeAll(ActionEvent event) {
+        while(timer+1<instructions1.size()){
+            //Timer + 1
+            timer = timer + 1;
+
+            //execute next instruction
+            int virtualAddressInstruction = indexNextInstruction;
+            Instruction instruction = instructions1.get(virtualAddressInstruction);
+
+            String operation = instruction.getOperation();
+            int processID = instruction.getProcessID();
+            int virtualAdress = instruction.getAdress();
+
+            //Different operations are possible
+            if(operation.equals("Start")){
+                startProcess(processID);
+            }
+            else if(operation.equals("Read")){
+
+                int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
+                int offsetInPage = virtualAdress-pageNumber*4096;
+
+                //See if page is in RAM
+                List<TableEntry> pageTable = ram.getPageTables().get(processID);
+
+                boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
+
+                int frameNumber = -1;
+                int realAdress = -1;
+
+                if(pageIsInRAM){
+                    frameNumber = pageTable.get(pageNumber).getFrameNumber();
+                    realAdress = 4096*frameNumber + offsetInPage;
+
+                    //change access time
+                    System.out.println(timer);
+                    ram.setPageTablePageAccessTime(processID, pageNumber, timer);
+
+                }
+                else{
+                    //via RLU load page in RAM and remove one
+                    //first remove LRU Page
+                    replacementViaLRU(processID);
+
+                    //move page to free place in RAM
+                    //Adjust page Table
+                    for(int i=0;i<ram.getFrameArray().length;i++){
+                        if(ram.getFrameArray()[i]==null){
+                            ram.getFrameArray()[i]=new Page(i,processID,pageNumber);
+                            pageTable.get(pageNumber).setPresentBit(true);
+                            pageTable.get(pageNumber).setFrameNumber(i);
+                            pageTable.get(pageNumber).setLastAccessTime(timer);
+
+
+                            frameNumber = pageTable.get(pageNumber).getFrameNumber();
+                            realAdress = 4096*frameNumber + offsetInPage;
+                        }
+                    }
+                }
+            }
+            else if(operation.equals("Write")){
+
+                int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
+                int offsetInPage = virtualAdress-pageNumber*4096;
+
+                //See if page is in RAM
+                List<TableEntry> pageTable = ram.getPageTables().get(processID);
+
+                boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
+
+                int frameNumber = -1;
+                int realAdress = -1;
+
+                if(pageIsInRAM){
+                    frameNumber = pageTable.get(pageNumber).getFrameNumber();
+                    realAdress = 4096*frameNumber + offsetInPage;
+
+                    //change access time
+                    //System.out.println(timer);
+                    ram.setPageTablePageAccessTime(processID, pageNumber, timer);
+                    ram.getPageTables().get(processID).get(pageNumber).setModifyBit(true);
+
+                }
+                else{
+                    //via RLU load page in RAM and remove one
+                    //first remove LRU Page
+                    replacementViaLRU(processID);
+
+                    //move page to free place in RAM
+                    //Adjust page Table
+                    for(int i=0;i<ram.getFrameArray().length;i++){
+                        if(ram.getFrameArray()[i]==null){
+                            ram.getFrameArray()[i]=new Page(i,processID,pageNumber);
+                            pageTable.get(pageNumber).setPresentBit(true);
+                            pageTable.get(pageNumber).setFrameNumber(i);
+                            pageTable.get(pageNumber).setLastAccessTime(timer);
+                            pageTable.get(pageNumber).setModifyBit(true);
+
+                            frameNumber = pageTable.get(pageNumber).getFrameNumber();
+                            realAdress = 4096*frameNumber + offsetInPage;
+                        }
+                    }
+                }
+            }
+            else if(operation.equals("Terminate")){
+
+                finishProcess(processID);
+
+                //show labels current instruction
+                if(timer == instructions1.size()-1) {
+                    //vorige
+                    netProcessIDLabel.setText(String.valueOf(processID));
+                    netinstructieLabel.setText(operation);
+                    netvirtadrLabel.setText("Geen");
+                    netframeLabel.setText("Geen");
+                    netoffsetlabel.setText("Geen");
+                    netreadrLabel.setText("Geen");
+                    //volgende
+                    volginstructieLabel.setText("null");
+                    volgvirtadrLabel.setText("null");
+                    volgframeLabel.setText("null");
+                    volgoffsetLabel.setText("null");
+                    volgreadrLabel.setText("null");
+                }
+            }
+
+            if(timer == instructions1.size()-1) {
+                //show timer value
+                timerLabel.setText(String.valueOf(timer));
+
+                //show number of writes to RAM
+                aantalWritesLabel.setText(String.valueOf(writesToRAM));
+
+                //show number of reads from RAM
+                aantalReadsLabel.setText(String.valueOf(readsFromRAM));
+            }
+
+            //show RAM table
+            ObservableList<Page> ramTable = FXCollections.observableArrayList();
+            Page[] tablePage = ram.getFrameArray();
+
+            ramTable.addAll(tablePage);
+
+            //show Page Table of current running process
+            ObservableList<TableEntry> pageTableOfProcess = FXCollections.observableArrayList();
+            List<TableEntry> table = ram.getPageTables().get(processID);
+            /**
+             for(int i=0;i<table.size();i++){
+             System.out.println(table.get(i));
+             }
+             **/
+            if(table!=null){
+                pageTableOfProcess.addAll(table);
+            }
+
+            indexNextInstruction++;
+        }
+    }
 
     @FXML //Execute one instruction and update the view
     void restart(ActionEvent event) {
