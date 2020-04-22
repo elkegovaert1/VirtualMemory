@@ -7,6 +7,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Controller {
 
@@ -214,6 +215,11 @@ public class Controller {
             if(pageIsInRAM){
                 frameNumber = pageTable.get(pageNumber).getFrameNumber();
                 realAdress = 4096*frameNumber + offsetInPage;
+
+                //change access time
+                System.out.println(timer);
+                ram.setPageTablePageAccessTime(processID, pageNumber, timer);
+
             }
             else{
                 //via RLU load page in RAM and remove one
@@ -249,18 +255,21 @@ public class Controller {
         //show RAM table
         ObservableList<Page> ramTable = FXCollections.observableArrayList();
         Page[] tablePage = ram.getFrameArray();
-        for(int i=0;i<tablePage.length;i++){
-            System.out.println(tablePage[i]);
-        }
-        System.out.println(tablePage);
+
         ramTable.addAll(tablePage);
+        RAMTable.refresh();
         RAMTable.setItems(ramTable);
 
         //show Page Table of current running process
         ObservableList<TableEntry> pageTableOfProcess = FXCollections.observableArrayList();
         List<TableEntry> table = ram.getPageTables().get(processID);
-        System.out.println(table);
+        /**
+        for(int i=0;i<table.size();i++){
+            System.out.println(table.get(i));
+        }
+        **/
         pageTableOfProcess.addAll(table);
+        pageTable.refresh();
         pageTable.setItems(pageTableOfProcess);
 
         indexNextInstruction++;
@@ -275,23 +284,34 @@ public class Controller {
 
     public void startProcess(int processId) {
 
-        int numberOfProcessesInRAM = ram.getProcessList().size();
-
+        int numberOfProcessesInRAM = ram.getProcessesInRAM();
+        System.out.println(numberOfProcessesInRAM);
         //Max 4 processes in RAM
         if(numberOfProcessesInRAM<4){
 
             ram.setProcessesInRAM(numberOfProcessesInRAM+1);
             //number of frames each process must have after startup process
             int framesPerProcess = 12/(numberOfProcessesInRAM+1);
-            int pagesToRemoveFromRAMPerProcess = Math.abs(12/(numberOfProcessesInRAM - framesPerProcess));
+            System.out.println(framesPerProcess);
+            int pagesToRemoveFromRAMPerProcess = 0;
+            if(numberOfProcessesInRAM!=0){
+                pagesToRemoveFromRAMPerProcess = Math.abs(12/numberOfProcessesInRAM - framesPerProcess);
+            }
 
             //Via LRU remove pages from all processes in RAM
+            //Replace from all processes the same amount of pages to make free place for new process
+            placementViaLRU(pagesToRemoveFromRAMPerProcess);
+
 
             //create new page table and put each page in RAM
             List<TableEntry> pageTable = new ArrayList<TableEntry>(12);
 
-            //move pages to free places in RAM
+            //move pages to empty free places in RAM
             //for every moved page place entry in page table
+            for(int k=0;k<ram.getFrameArray().length;k++){
+                System.out.println(ram.getFrameArray()[k]);
+            }
+
             for(int i=0; i<16; i++){
 
                 if(i<framesPerProcess){
@@ -324,6 +344,55 @@ public class Controller {
             ram.addPageTable(processId,pageTable);
 
         }
+    }
+
+    //when new process comes in from all the processes a same amount has to be removed of evry process
+    public void placementViaLRU(int numberOfFramesToRemovePerProcess){
+
+        System.out.println(numberOfFramesToRemovePerProcess);
+
+        Map<Integer, List<TableEntry>> pageTables = ram.getPageTables();
+
+        for (Map.Entry<Integer, List<TableEntry>> pageTableEntry : pageTables.entrySet()){
+
+            int processID = pageTableEntry.getKey();
+            List<TableEntry> pageTable = pageTableEntry.getValue();
+
+            //LRU per Process
+            for(int i = 0; i<numberOfFramesToRemovePerProcess; i++){
+                replacementViaLRU(processID);
+            }
+
+
+        }
+
+    }
+
+    //Replacement via Least Recently Used, only remove
+    public void replacementViaLRU(int processID){
+
+        List<TableEntry> pageTable = ram.getPageTables().get(processID);
+
+        TableEntry leastRecentlyUsed = pageTable.get(0);
+        for(int i=0; i<pageTable.size(); i++) {
+            if(pageTable.get(i).isPresentBit()==true){
+                leastRecentlyUsed = pageTable.get(i);
+            }
+        }
+
+        for(int i=1; i<pageTable.size(); i++){
+            if(leastRecentlyUsed.getLastAccessTime()>pageTable.get(i).getLastAccessTime()&&pageTable.get(i).isPresentBit()){
+                leastRecentlyUsed = pageTable.get(i);
+            }
+        }
+
+        //set present bit to false
+        leastRecentlyUsed.setPresentBit(false);
+
+        //remove frame from RAM
+        int frameNumberToRemove = leastRecentlyUsed.getFrameNumber();
+        ram.getFrameArray()[frameNumberToRemove] = null;
+
     }
 
     public int givePageNumberOfVirtualAdress(int virtualAdress) {

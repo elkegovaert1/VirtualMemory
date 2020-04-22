@@ -60,4 +60,8 @@ public class RAM {
     public void setProcessesInRAM(int processesInRAM) {
         this.processesInRAM = processesInRAM;
     }
+
+    public void setPageTablePageAccessTime(int processID, int pageNumber, int timer){
+        pageTables.get(processID).get(pageNumber).setLastAccessTime(timer);
+    }
 }

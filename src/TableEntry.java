@@ -62,4 +62,8 @@ public class TableEntry {
     public void setFrameNumber(int frameNumber) {
         this.frameNumber = frameNumber;
     }
+
+    public String toString(){
+        return "Frame: "+frameNumber+" Presentbit: "+presentBit+" Modifybit: "+modifyBit+" Last Acess time: "+lastAccessTime+" Frame number: "+frameNumber;
+    }
 }
