@@ -467,7 +467,7 @@ public class Controller {
                 finishProcess(processID);
 
                 //show labels current instruction
-                if(timer == instructions1.size()-1) {
+                if(timer == instructionsGlob.size()-1) {
                     //vorige
                     netProcessIDLabel.setText(String.valueOf(processID));
                     netinstructieLabel.setText(operation);
@@ -484,7 +484,7 @@ public class Controller {
                 }
             }
 
-            if(timer == instructions1.size()-1) {
+            if(timer == instructionsGlob.size()-1) {
                 //show timer value
                 timerLabel.setText(String.valueOf(timer));
 
