@@ -137,6 +137,9 @@ public class Controller {
     public void initializeList1(List<Instruction> instructions) {
         instructions1 = instructions;
 
+        //Default for startup
+        instructionsGlob = instructions1;
+
         // Set up the RAM table
         RAMFrameCol.setCellValueFactory(
                 new PropertyValueFactory<Page,Integer>("frameNumber")
@@ -176,14 +179,14 @@ public class Controller {
 
     @FXML //Execute one instruction and update the view
     void executeOneInstruction(ActionEvent event) {
-        if(timer+1<instructions1.size()){
+        if(timer+1<instructionsGlob.size()){
 
         //Timer + 1
         timer = timer + 1;
 
         //execute next instruction
         int virtualAddressInstruction = indexNextInstruction;
-        Instruction instruction = instructions1.get(virtualAddressInstruction);
+        Instruction instruction = instructionsGlob.get(virtualAddressInstruction);
 
         String operation = instruction.getOperation();
         int processID = instruction.getProcessID();
@@ -356,13 +359,13 @@ public class Controller {
 
     @FXML //Execute all instructions and update the view
     void executeAll(ActionEvent event) {
-        while(timer+1<instructions1.size()){
+        while(timer+1<instructionsGlob.size()){
             //Timer + 1
             timer = timer + 1;
 
             //execute next instruction
             int virtualAddressInstruction = indexNextInstruction;
-            Instruction instruction = instructions1.get(virtualAddressInstruction);
+            Instruction instruction = instructionsGlob.get(virtualAddressInstruction);
 
             String operation = instruction.getOperation();
             int processID = instruction.getProcessID();
@@ -564,6 +567,7 @@ public class Controller {
         panelChoice.setText("20000_20");
         amountOfInstruction = 20000;
         instructionsGlob = instructions3;
+        restart(new ActionEvent());
     }
 
     @FXML
@@ -571,6 +575,7 @@ public class Controller {
         panelChoice.setText("20000_4");
         amountOfInstruction = 20000;
         instructionsGlob = instructions2;
+        restart(new ActionEvent());
     }
 
     @FXML
@@ -578,6 +583,7 @@ public class Controller {
         panelChoice.setText("30_3");
         amountOfInstruction = 20;
         instructionsGlob = instructions1;
+        restart(new ActionEvent());
     }
 
     public void startProcess(int processId) {
