@@ -226,7 +226,7 @@ public class Controller {
                 realAdress = 4096*frameNumber + offsetInPage;
 
                 //change access time
-                System.out.println(timer);
+                //System.out.println(timer);
                 ram.setPageTablePageAccessTime(processID, pageNumber, timer);
 
             }
@@ -590,7 +590,7 @@ public class Controller {
     public void startProcess(int processId) {
 
         int numberOfProcessesInRAM = ram.getProcessesInRAM();
-        System.out.println(numberOfProcessesInRAM);
+        //System.out.println(numberOfProcessesInRAM);
         //Max 4 processes in RAM
         if(numberOfProcessesInRAM<4){
 
