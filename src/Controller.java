@@ -52,16 +52,10 @@ public class Controller {
 
     //Next instruction label
     @FXML
+    public Label volgprocessidLabel;
+
+    @FXML
     public Label volginstructieLabel;
-
-    @FXML
-    public Label volgvirtadrLabel;
-
-    @FXML
-    public Label volgframeLabel;
-
-    @FXML
-    public Label volgoffsetLabel;
 
     @FXML
     public Label volgreadrLabel;
@@ -139,6 +133,8 @@ public class Controller {
 
         //Default for startup
         instructionsGlob = instructions1;
+        writesToRAM = 0;
+        readsFromRAM = 0;
 
         // Set up the RAM table
         RAMFrameCol.setCellValueFactory(
@@ -203,6 +199,14 @@ public class Controller {
             netframeLabel.setText("Geen");
             netoffsetlabel.setText("Geen");
             netreadrLabel.setText("Geen");
+
+            volgprocessidLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getProcessID()));
+            volginstructieLabel.setText(instructionsGlob.get(virtualAddressInstruction+1).getOperation());
+            if (instructionsGlob.get(virtualAddressInstruction+1).getAdress() == 0) {
+                volgreadrLabel.setText("Geen");
+            } else {
+                volgreadrLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getAdress()));
+            }
         }
         else if(operation.equals("Read")){
 
@@ -230,6 +234,7 @@ public class Controller {
                 //via RLU load page in RAM and remove one
                 //first remove LRU Page
                 replacementViaLRU(processID);
+                readsFromRAM++;
 
                 //move page to free place in RAM
                 //Adjust page Table
@@ -254,6 +259,14 @@ public class Controller {
             netframeLabel.setText(String.valueOf(frameNumber));
             netoffsetlabel.setText(String.valueOf(offsetInPage));
             netreadrLabel.setText(String.valueOf(realAdress));
+
+            volgprocessidLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getProcessID()));
+            volginstructieLabel.setText(instructionsGlob.get(virtualAddressInstruction+1).getOperation());
+            if (instructionsGlob.get(virtualAddressInstruction+1).getAdress() == 0) {
+                volgreadrLabel.setText("Geen");
+            } else {
+                volgreadrLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getAdress()));
+            }
         }
         else if(operation.equals("Write")){
 
@@ -273,7 +286,7 @@ public class Controller {
                 realAdress = 4096*frameNumber + offsetInPage;
 
                 //change access time
-                System.out.println(timer);
+                //System.out.println(timer);
                 ram.setPageTablePageAccessTime(processID, pageNumber, timer);
                 ram.getPageTables().get(processID).get(pageNumber).setModifyBit(true);
 
@@ -282,6 +295,7 @@ public class Controller {
                 //via RLU load page in RAM and remove one
                 //first remove LRU Page
                 replacementViaLRU(processID);
+                writesToRAM++;
 
                 //move page to free place in RAM
                 //Adjust page Table
@@ -306,6 +320,14 @@ public class Controller {
             netframeLabel.setText(String.valueOf(frameNumber));
             netoffsetlabel.setText(String.valueOf(offsetInPage));
             netreadrLabel.setText(String.valueOf(realAdress));
+
+            volgprocessidLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getProcessID()));
+            volginstructieLabel.setText(instructionsGlob.get(virtualAddressInstruction+1).getOperation());
+            if (instructionsGlob.get(virtualAddressInstruction+1).getAdress() == 0) {
+                volgreadrLabel.setText("Geen");
+            } else {
+                volgreadrLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getAdress()));
+            }
         }
         else if(operation.equals("Terminate")){
 
@@ -318,6 +340,14 @@ public class Controller {
             netframeLabel.setText("Geen");
             netoffsetlabel.setText("Geen");
             netreadrLabel.setText("Geen");
+
+            volgprocessidLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getProcessID()));
+            volginstructieLabel.setText(instructionsGlob.get(virtualAddressInstruction+1).getOperation());
+            if (instructionsGlob.get(virtualAddressInstruction+1).getAdress() == 0) {
+                volgreadrLabel.setText("Geen");
+            } else {
+                volgreadrLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getAdress()));
+            }
         }
 
 
@@ -378,29 +408,21 @@ public class Controller {
             else if(operation.equals("Read")){
 
                 int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
-                int offsetInPage = virtualAdress-pageNumber*4096;
 
                 //See if page is in RAM
                 List<TableEntry> pageTable = ram.getPageTables().get(processID);
 
                 boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
 
-                int frameNumber = -1;
-                int realAdress = -1;
-
                 if(pageIsInRAM){
-                    frameNumber = pageTable.get(pageNumber).getFrameNumber();
-                    realAdress = 4096*frameNumber + offsetInPage;
-
                     //change access time
-                    System.out.println(timer);
                     ram.setPageTablePageAccessTime(processID, pageNumber, timer);
-
                 }
                 else{
                     //via RLU load page in RAM and remove one
                     //first remove LRU Page
                     replacementViaLRU(processID);
+                    readsFromRAM++;
 
                     //move page to free place in RAM
                     //Adjust page Table
@@ -410,10 +432,6 @@ public class Controller {
                             pageTable.get(pageNumber).setPresentBit(true);
                             pageTable.get(pageNumber).setFrameNumber(i);
                             pageTable.get(pageNumber).setLastAccessTime(timer);
-
-
-                            frameNumber = pageTable.get(pageNumber).getFrameNumber();
-                            realAdress = 4096*frameNumber + offsetInPage;
                         }
                     }
                 }
@@ -421,22 +439,14 @@ public class Controller {
             else if(operation.equals("Write")){
 
                 int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
-                int offsetInPage = virtualAdress-pageNumber*4096;
 
                 //See if page is in RAM
                 List<TableEntry> pageTable = ram.getPageTables().get(processID);
-
                 boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
 
-                int frameNumber = -1;
-                int realAdress = -1;
-
                 if(pageIsInRAM){
-                    frameNumber = pageTable.get(pageNumber).getFrameNumber();
-                    realAdress = 4096*frameNumber + offsetInPage;
 
                     //change access time
-                    //System.out.println(timer);
                     ram.setPageTablePageAccessTime(processID, pageNumber, timer);
                     ram.getPageTables().get(processID).get(pageNumber).setModifyBit(true);
 
@@ -445,6 +455,7 @@ public class Controller {
                     //via RLU load page in RAM and remove one
                     //first remove LRU Page
                     replacementViaLRU(processID);
+                    writesToRAM++;
 
                     //move page to free place in RAM
                     //Adjust page Table
@@ -455,9 +466,6 @@ public class Controller {
                             pageTable.get(pageNumber).setFrameNumber(i);
                             pageTable.get(pageNumber).setLastAccessTime(timer);
                             pageTable.get(pageNumber).setModifyBit(true);
-
-                            frameNumber = pageTable.get(pageNumber).getFrameNumber();
-                            realAdress = 4096*frameNumber + offsetInPage;
                         }
                     }
                 }
@@ -477,9 +485,6 @@ public class Controller {
                     netreadrLabel.setText("Geen");
                     //volgende
                     volginstructieLabel.setText("null");
-                    volgvirtadrLabel.setText("null");
-                    volgframeLabel.setText("null");
-                    volgoffsetLabel.setText("null");
                     volgreadrLabel.setText("null");
                 }
             }
@@ -504,11 +509,7 @@ public class Controller {
             //show Page Table of current running process
             ObservableList<TableEntry> pageTableOfProcess = FXCollections.observableArrayList();
             List<TableEntry> table = ram.getPageTables().get(processID);
-            /**
-             for(int i=0;i<table.size();i++){
-             System.out.println(table.get(i));
-             }
-             **/
+
             if(table!=null){
                 pageTableOfProcess.addAll(table);
             }
@@ -596,7 +597,7 @@ public class Controller {
             ram.setProcessesInRAM(numberOfProcessesInRAM+1);
             //number of frames each process must have after startup process
             int framesPerProcess = 12/(numberOfProcessesInRAM+1);
-            System.out.println(framesPerProcess);
+            //System.out.println(framesPerProcess);
             int pagesToRemoveFromRAMPerProcess = 0;
             if(numberOfProcessesInRAM!=0){
                 pagesToRemoveFromRAMPerProcess = Math.abs(12/numberOfProcessesInRAM - framesPerProcess);
@@ -612,9 +613,9 @@ public class Controller {
 
             //move pages to empty free places in RAM
             //for every moved page place entry in page table
-            for(int k=0;k<ram.getFrameArray().length;k++){
+            /*for(int k=0;k<ram.getFrameArray().length;k++){
                 System.out.println(ram.getFrameArray()[k]);
-            }
+            }*/
 
             for(int i=0; i<16; i++){
 
@@ -718,7 +719,7 @@ public class Controller {
     //when new process comes in from all the processes a same amount has to be removed of every process
     public void internalReplacementViaLRU(int numberOfFramesToRemovePerProcess){
 
-        System.out.println(numberOfFramesToRemovePerProcess);
+        //System.out.println(numberOfFramesToRemovePerProcess);
 
         Map<Integer, List<TableEntry>> pageTables = ram.getPageTables();
 
