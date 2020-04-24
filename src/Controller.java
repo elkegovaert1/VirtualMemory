@@ -341,15 +341,20 @@ public class Controller {
             netoffsetlabel.setText("Geen");
             netreadrLabel.setText("Geen");
 
-            volgprocessidLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getProcessID()));
-            volginstructieLabel.setText(instructionsGlob.get(virtualAddressInstruction+1).getOperation());
-            if (instructionsGlob.get(virtualAddressInstruction+1).getAdress() == 0) {
-                volgreadrLabel.setText("Geen");
+            if (indexNextInstruction != instructionsGlob.size() - 1) {
+                volgprocessidLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getProcessID()));
+                volginstructieLabel.setText(instructionsGlob.get(virtualAddressInstruction+1).getOperation());
+                if (instructionsGlob.get(virtualAddressInstruction+1).getAdress() == 0) {
+                    volgreadrLabel.setText("Geen");
+                } else {
+                    volgreadrLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getAdress()));
+                }
             } else {
-                volgreadrLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getAdress()));
+                volgprocessidLabel.setText("Geen");
+                volgreadrLabel.setText("Geen");
+                volginstructieLabel.setText("Geen");
             }
         }
-
 
         //show timer value
         timerLabel.setText(String.valueOf(timer));
