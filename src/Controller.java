@@ -60,6 +60,9 @@ public class Controller {
     @FXML
     public Label volgreadrLabel;
 
+    @FXML
+    public Label pagetableLabel;
+
     //Table RAM
     @FXML
     public TableView<Page> RAMTable;
@@ -387,6 +390,12 @@ public class Controller {
         pageTable.refresh();
         pageTable.setItems(pageTableOfProcess);
 
+        if (instructionsGlob.get(indexNextInstruction).getOperation().equals("Terminate")) {
+            pagetableLabel.setText("Page table leeg door terminate operatie");
+        } else {
+            pagetableLabel.setText("Page table van process: " + instructionsGlob.get(indexNextInstruction).getProcessID());
+        }
+
         indexNextInstruction++;
 
         }
@@ -664,9 +673,6 @@ public class Controller {
         if(beforeTermNumbOfProcessesInRAM!=1){
             extraFramesPerProcess = 12/(beforeTermNumbOfProcessesInRAM-1)-12/beforeTermNumbOfProcessesInRAM;
         }
-
-
-
 
         //Remove frames from RAM
         Page[] frameArray = ram.getFrameArray();

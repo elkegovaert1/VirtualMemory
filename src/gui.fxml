@@ -93,6 +93,7 @@
                             </children></AnchorPane>
                     </content>
                 </TitledPane>
+            <Label fx:id="pagetableLabel" layoutX="18.0" layoutY="522.0" text="Page table leeg" />
             </children></AnchorPane>
     </children>
     <columnConstraints>
