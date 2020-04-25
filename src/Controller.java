@@ -378,7 +378,7 @@ public class Controller {
         RAMTable.refresh();
         RAMTable.setItems(ramTable);
 
-        String [] kleurenarray = {
+        String [] colourArray1 = {
                 "-fx-background-color : #f25f16",
                 "-fx-background-color : #f2169a",
                 "-fx-background-color : #16f2e7",
@@ -407,17 +407,13 @@ public class Controller {
                 if (item == null || empty) {
                     for(int i=0; i< row.getColumns().size();i++) {
                         row.getColumns().get(i).setStyle("");
-                        System.out.println(row.getColumns().get(1).getCellFactory());
-
                     }
                 } else {
                     int kleur = item.getProcessId();
 
                     //We apply now the changes in all the cells of the row
                     for(int i=0; i< row.getColumns().size();i++) {
-                        row.getColumns().get(i).setStyle(kleurenarray[kleur]);
-                        System.out.println(row.getColumns().get(1).getCellFactory());
-
+                        row.getColumns().get(i).setStyle(colourArray1[kleur]);
                     }
                 }
             }
@@ -443,6 +439,31 @@ public class Controller {
         } else {
             pagetableLabel.setText("Page table van process: " + instructionsGlob.get(indexNextInstruction).getProcessID());
         }
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        pageTable.setRowFactory(row -> new TableRow<TableEntry>(){
+            @Override
+            public void updateItem(TableEntry item, boolean empty){
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    for(int i=0; i< row.getColumns().size();i++) {
+                        row.getColumns().get(i).setStyle("");
+                    }
+                } else {
+                   if (item.isPresentBit() == true) {
+                       for(int i=0; i< row.getColumns().size();i++) {
+                           row.getColumns().get(i).setStyle("-fx-background-color : green");
+                       }
+                   } else {
+                       for(int i=0; i< row.getColumns().size();i++) {
+                           row.getColumns().get(i).setStyle("-fx-background-color : red");
+                       }
+                   }
+                }
+            }
+        });
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         indexNextInstruction++;
 
@@ -577,6 +598,7 @@ public class Controller {
             if(table!=null){
                 pageTableOfProcess.addAll(table);
             }
+
 
             indexNextInstruction++;
         }
