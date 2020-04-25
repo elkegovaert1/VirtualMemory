@@ -13,13 +13,16 @@
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="200.0">
                             <children>
-                                <Label layoutX="10.0" layoutY="10.0" text="Timer" />
+                                <Label layoutX="7.0" layoutY="10.0" text="Timer" />
                                 <Label fx:id="timerLabel" layoutX="140.0" layoutY="10.0" text="---" />
                                 <Label layoutX="5.0" layoutY="41.0" prefHeight="21.0" prefWidth="128.0" text="Persistent naar RAM">
                            <font>
                               <Font size="14.0" />
                            </font></Label>
-                                <Label layoutX="2.0" layoutY="70.0" text="RAM naar Persistent" />
+                                <Label layoutX="7.0" layoutY="71.0" text="RAM naar Persistent">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
                                 <Label fx:id="aantalWritesLabel" layoutX="140.0" layoutY="40.0" text="---" />
                                 <Label fx:id="aantalReadsLabel" layoutX="140.0" layoutY="70.0" text="---" />
                             </children>
@@ -31,7 +34,7 @@
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
                                 <Label layoutX="13.0" layoutY="70.0" text="Virtueel adres" />
-                                <Label layoutX="14.0" layoutY="100.0" text="Reëel adres" />
+                                <Label layoutX="13.0" layoutY="100.0" text="Reëel adres" />
                                 <Label layoutX="11.0" layoutY="130.0" text="Frame" />
                                 <Label layoutX="11.0" layoutY="162.0" text="Offset" />
                                 <Label layoutX="10.0" layoutY="10.0" text="ProcessID" />
@@ -61,7 +64,7 @@
                 <Button fx:id="execallButton" layoutX="18.0" layoutY="557.0" mnemonicParsing="false" onAction="#executeAll" prefHeight="40.0" prefWidth="150.0" text="Execute all" />
                 <Button fx:id="execoneButton" layoutX="193.0" layoutY="557.0" mnemonicParsing="false" onAction="#executeOneInstruction" prefHeight="40.0" prefWidth="150.0" text="Execute one by one" />
                 <Button fx:id="restartButton" layoutX="672.0" layoutY="557.0" mnemonicParsing="false" onAction="#restart" prefHeight="40.0" prefWidth="150.0" text="Restart" />
-                <MenuButton fx:id="panelChoice" layoutX="368.0" layoutY="557.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Kies uw selectie" textAlignment="CENTER">
+                <MenuButton fx:id="panelChoice" layoutX="368.0" layoutY="557.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="150.0" text="Kies bestand" textAlignment="CENTER">
                     <items>
                         <MenuItem mnemonicParsing="false" onAction="#choice303" text="30_3" />
                         <MenuItem mnemonicParsing="false" onAction="#choice200004" text="20000_4" />

@@ -441,6 +441,7 @@ public class Controller {
                     RAMToPersistent++;
 
                     //move page to free place in RAM
+                    persistentToRAM++;
                     //Adjust page Table
                     for(int i=0;i<ram.getFrameArray().length;i++){
                         if(ram.getFrameArray()[i]==null){
@@ -471,9 +472,10 @@ public class Controller {
                     //via RLU load page in RAM and remove one
                     //first remove LRU Page
                     replacementViaLRU(processID);
-                    persistentToRAM++;
+                    RAMToPersistent++;
 
                     //move page to free place in RAM
+                    persistentToRAM++;
                     //Adjust page Table
                     for(int i=0;i<ram.getFrameArray().length;i++){
                         if(ram.getFrameArray()[i]==null){
