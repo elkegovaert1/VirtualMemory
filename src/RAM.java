@@ -4,6 +4,7 @@ public class RAM {
     //Page Tables
     //Mapping of processId on List<TableEntry> pagetable
     private Map<Integer, List<TableEntry>> pageTables;
+    //processes that have been in ram => keeps amount of writes and reads from and to persistent memory
     private List<Process> processList;
     private Page[] frameArray;
     private int frameCount;

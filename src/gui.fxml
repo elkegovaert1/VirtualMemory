@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+<GridPane alignment="center" hgap="10" vgap="10" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
     <children>
         <AnchorPane prefHeight="628.0" prefWidth="1100.0">
             <children>
@@ -13,34 +15,37 @@
                             <children>
                                 <Label layoutX="10.0" layoutY="10.0" text="Timer" />
                                 <Label fx:id="timerLabel" layoutX="140.0" layoutY="10.0" text="---" />
-                                <Label layoutX="10.0" layoutY="40.0" text="Write naar RAM" />
-                                <Label layoutX="10.0" layoutY="70.0" text="Read van RAM" />
+                                <Label layoutX="5.0" layoutY="41.0" prefHeight="21.0" prefWidth="128.0" text="Persistent naar RAM">
+                           <font>
+                              <Font size="14.0" />
+                           </font></Label>
+                                <Label layoutX="2.0" layoutY="70.0" text="RAM naar Persistent" />
                                 <Label fx:id="aantalWritesLabel" layoutX="140.0" layoutY="40.0" text="---" />
                                 <Label fx:id="aantalReadsLabel" layoutX="140.0" layoutY="70.0" text="---" />
                             </children>
                         </AnchorPane>
                     </content>
                 </TitledPane>
-                <TitledPane fx:id="Net" animated="false" layoutX="842.0" layoutY="176.0" prefHeight="210.0" prefWidth="230.0" text="Net uitgevoerde instructie">
+                <TitledPane fx:id="Net" animated="false" layoutX="842.0" layoutY="209.0" prefHeight="228.0" prefWidth="230.0" text="Net uitgevoerde instructie">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
-                                <Label layoutX="10.0" layoutY="160.0" text="Instructie" />
-                                <Label layoutX="10.0" layoutY="40.0" text="Virtueel adres" />
-                                <Label layoutX="10.0" layoutY="70.0" text="Reëel adres" />
-                                <Label layoutX="10.0" layoutY="100.0" text="Frame" />
-                                <Label layoutX="10.0" layoutY="130.0" text="Offset" />
+                                <Label layoutX="13.0" layoutY="70.0" text="Virtueel adres" />
+                                <Label layoutX="14.0" layoutY="100.0" text="Reëel adres" />
+                                <Label layoutX="11.0" layoutY="130.0" text="Frame" />
+                                <Label layoutX="11.0" layoutY="162.0" text="Offset" />
                                 <Label layoutX="10.0" layoutY="10.0" text="ProcessID" />
-                                <Label fx:id="netinstructieLabel" layoutX="140.0" layoutY="160.0" text="---" />
-                                <Label fx:id="netvirtadrLabel" layoutX="140.0" layoutY="40.0" text="---" />
-                                <Label fx:id="netreadrLabel" layoutX="140.0" layoutY="70.0" text="---" />
-                                <Label fx:id="netframeLabel" layoutX="140.0" layoutY="100.0" text="---" />
-                                <Label fx:id="netoffsetlabel" layoutX="140.0" layoutY="130.0" text="---" />
+                                <Label fx:id="netinstructieLabel" layoutX="140.0" layoutY="40.0" text="---" />
+                                <Label fx:id="netvirtadrLabel" layoutX="140.0" layoutY="70.0" text="---" />
+                                <Label fx:id="netreadrLabel" layoutX="140.0" layoutY="100.0" text="---" />
+                                <Label fx:id="netframeLabel" layoutX="140.0" layoutY="130.0" text="---" />
+                                <Label fx:id="netoffsetlabel" layoutX="140.0" layoutY="162.0" text="---" />
                                 <Label fx:id="netProcessIDLabel" layoutX="140.0" layoutY="10.0" text="---" />
+                                <Label layoutX="12.0" layoutY="40.0" text="Instructie" />
                             </children></AnchorPane>
                     </content>
                 </TitledPane>
-                <TitledPane fx:id="Volg" animated="false" layoutX="842.0" layoutY="412.0" prefHeight="190.0" prefWidth="230.0" text="Volgende instructie">
+                <TitledPane fx:id="Volg" animated="false" layoutX="842.0" layoutY="465.0" prefHeight="135.0" prefWidth="230.0" text="Volgende instructie">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                             <children>
@@ -98,6 +103,7 @@
     </children>
     <columnConstraints>
         <ColumnConstraints />
+      <ColumnConstraints />
     </columnConstraints>
     <rowConstraints>
         <RowConstraints />

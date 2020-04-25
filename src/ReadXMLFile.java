@@ -20,9 +20,9 @@ public class ReadXMLFile {
         List<Instruction> instructions = new ArrayList<>();
 
         // ELKE
-        File xmlFile = new File("C:\\Users\\elkeg\\IdeaProjects\\VirtualMemory\\"+bestandnaam);
+        //File xmlFile = new File("C:\\Users\\elkeg\\IdeaProjects\\VirtualMemory\\"+bestandnaam);
         // GLENN
-        // File xmlFile = new File("C:\\Users\\glenn\\IntelliJ-workspace\\VirtualMemory\\"+bestandnaam);
+         File xmlFile = new File("C:\\Users\\glenn\\IntelliJ-workspace\\VirtualMemory\\"+bestandnaam);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(xmlFile);

@@ -117,11 +117,11 @@ public class Controller {
     //timer starts at -1
     private int timer = -1;
 
-    //writes to RAM
-    private int writesToRAM=0;
+    //amount of pages from persistent memory to RAM: Global
+    private int persistentToRAM =0;
 
-    //reads from RAM
-    private int readsFromRAM=0;
+    //amount of pages from RAM to persistent memory: Global
+    private int RAMToPersistent =0;
 
     //RAM
     RAM ram = new RAM(0);
@@ -130,14 +130,14 @@ public class Controller {
     //Start at instruction 0;
     private int indexNextInstruction = 0;
 
-    //When starting the application all the fill all the Lists
+    //When starting the application populate all the Lists
     public void initializeList1(List<Instruction> instructions) {
         instructions1 = instructions;
 
         //Default for startup
         instructionsGlob = instructions1;
-        writesToRAM = 0;
-        readsFromRAM = 0;
+        persistentToRAM = 0;
+        RAMToPersistent = 0;
 
         // Set up the RAM table
         RAMFrameCol.setCellValueFactory(
@@ -237,9 +237,10 @@ public class Controller {
                 //via RLU load page in RAM and remove one
                 //first remove LRU Page
                 replacementViaLRU(processID);
-                readsFromRAM++;
+                RAMToPersistent++;
 
                 //move page to free place in RAM
+                persistentToRAM++;
                 //Adjust page Table
                 for(int i=0;i<ram.getFrameArray().length;i++){
                     if(ram.getFrameArray()[i]==null){
@@ -298,9 +299,10 @@ public class Controller {
                 //via RLU load page in RAM and remove one
                 //first remove LRU Page
                 replacementViaLRU(processID);
-                writesToRAM++;
+                RAMToPersistent++;
 
                 //move page to free place in RAM
+                persistentToRAM++;
                 //Adjust page Table
                 for(int i=0;i<ram.getFrameArray().length;i++){
                     if(ram.getFrameArray()[i]==null){
@@ -363,10 +365,10 @@ public class Controller {
         timerLabel.setText(String.valueOf(timer));
 
         //show number of writes to RAM
-        aantalWritesLabel.setText(String.valueOf(writesToRAM));
+        aantalWritesLabel.setText(String.valueOf(persistentToRAM));
 
         //show number of reads from RAM
-        aantalReadsLabel.setText(String.valueOf(readsFromRAM));
+        aantalReadsLabel.setText(String.valueOf(RAMToPersistent));
 
         //show RAM table
         ObservableList<Page> ramTable = FXCollections.observableArrayList();
@@ -436,7 +438,7 @@ public class Controller {
                     //via RLU load page in RAM and remove one
                     //first remove LRU Page
                     replacementViaLRU(processID);
-                    readsFromRAM++;
+                    RAMToPersistent++;
 
                     //move page to free place in RAM
                     //Adjust page Table
@@ -469,7 +471,7 @@ public class Controller {
                     //via RLU load page in RAM and remove one
                     //first remove LRU Page
                     replacementViaLRU(processID);
-                    writesToRAM++;
+                    persistentToRAM++;
 
                     //move page to free place in RAM
                     //Adjust page Table
@@ -508,10 +510,10 @@ public class Controller {
                 timerLabel.setText(String.valueOf(timer));
 
                 //show number of writes to RAM
-                aantalWritesLabel.setText(String.valueOf(writesToRAM));
+                aantalWritesLabel.setText(String.valueOf(persistentToRAM));
 
                 //show number of reads from RAM
-                aantalReadsLabel.setText(String.valueOf(readsFromRAM));
+                aantalReadsLabel.setText(String.valueOf(RAMToPersistent));
             }
 
             //show RAM table
@@ -538,17 +540,17 @@ public class Controller {
         timer = -1;
         ram = new RAM(12);
         indexNextInstruction = 0;
-        readsFromRAM = 0;
-        writesToRAM = 0;
+        RAMToPersistent = 0;
+        persistentToRAM = 0;
 
         //show timer value
         timerLabel.setText(String.valueOf(timer));
 
         //show number of writes to RAM
-        aantalWritesLabel.setText(String.valueOf(writesToRAM));
+        aantalWritesLabel.setText(String.valueOf(persistentToRAM));
 
         //show number of reads from RAM
-        aantalReadsLabel.setText(String.valueOf(readsFromRAM));
+        aantalReadsLabel.setText(String.valueOf(RAMToPersistent));
 
         //reset labels
         netreadrLabel.setText("---");
@@ -611,7 +613,7 @@ public class Controller {
             ram.setProcessesInRAM(numberOfProcessesInRAM+1);
             //number of frames each process must have after startup process
             int framesPerProcess = 12/(numberOfProcessesInRAM+1);
-            //System.out.println(framesPerProcess);
+
             int pagesToRemoveFromRAMPerProcess = 0;
             if(numberOfProcessesInRAM!=0){
                 pagesToRemoveFromRAMPerProcess = Math.abs(12/numberOfProcessesInRAM - framesPerProcess);
@@ -626,11 +628,7 @@ public class Controller {
             List<TableEntry> pageTable = new ArrayList<TableEntry>(12);
 
             //move pages to empty free places in RAM
-            //for every moved page place entry in page table
-            /*for(int k=0;k<ram.getFrameArray().length;k++){
-                System.out.println(ram.getFrameArray()[k]);
-            }*/
-
+            //for every moved page, place entry in page table
             for(int i=0; i<16; i++){
 
                 if(i<framesPerProcess){
@@ -647,6 +645,7 @@ public class Controller {
                     }
 
                     ram.getFrameArray()[freeFrameNumber]=new Page(freeFrameNumber,processId,i);
+                    persistentToRAM++;
                     pageTable.add(new TableEntry(i, true, false, -1, freeFrameNumber));
 
                 }
@@ -680,6 +679,7 @@ public class Controller {
         for(int i=0;i<frameArray.length;i++){
             if(frameArray[i].getProcessId()==processId){
                 frameArray[i] = null;
+                RAMToPersistent++;
             }
         }
 
@@ -716,6 +716,7 @@ public class Controller {
                 }
 
                 frameArray[nextEmptyFrame] = new Page(nextEmptyFrame,processID,nextNotPresentPageNumber);
+                persistentToRAM++;
 
                 //Update pageTeble
                 pageTable.get(nextNotPresentPageNumber).setPresentBit(true);
@@ -742,6 +743,7 @@ public class Controller {
             //LRU per Process
             for(int i = 0; i<numberOfFramesToRemovePerProcess; i++){
                 replacementViaLRU(processID);
+                RAMToPersistent++;
             }
 
 
