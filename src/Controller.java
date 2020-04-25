@@ -378,7 +378,53 @@ public class Controller {
         RAMTable.refresh();
         RAMTable.setItems(ramTable);
 
-        //show Page Table of current running process
+        String [] kleurenarray = {
+                "-fx-background-color : #f25f16",
+                "-fx-background-color : #f2169a",
+                "-fx-background-color : #16f2e7",
+                "-fx-background-color : #f2c216",
+                "-fx-background-color : #7916f2",
+                "-fx-background-color : #acf216",
+                "-fx-background-color : #67f216",
+                "-fx-background-color : #16f242",
+                "-fx-background-color : #16f2b4",
+                "-fx-background-color : #f29e16",
+                "-fx-background-color : #16cdf2",
+                "-fx-background-color : #1696f2",
+                "-fx-background-color : #1628f2",
+                "-fx-background-color : #4d16f2",
+                "-fx-background-color : #e7f216",
+                "-fx-background-color : #ac16f2",
+                "-fx-background-color : #f216ee",
+                "-fx-background-color : #637364",
+                "-fx-background-color : #eb2e21",
+                "-fx-background-color : #ffffff"
+        };
+        RAMTable.setRowFactory(row -> new TableRow<Page>(){
+            @Override
+            public void updateItem(Page item, boolean empty){
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    for(int i=0; i< row.getColumns().size();i++) {
+                        row.getColumns().get(i).setStyle("");
+                        System.out.println(row.getColumns().get(1).getCellFactory());
+
+                    }
+                } else {
+                    int kleur = item.getProcessId();
+
+                    //We apply now the changes in all the cells of the row
+                    for(int i=0; i< row.getColumns().size();i++) {
+                        row.getColumns().get(i).setStyle(kleurenarray[kleur]);
+                        System.out.println(row.getColumns().get(1).getCellFactory());
+
+                    }
+                }
+            }
+        });
+
+
+            //show Page Table of current running process
         ObservableList<TableEntry> pageTableOfProcess = FXCollections.observableArrayList();
         List<TableEntry> table = ram.getPageTables().get(processID);
         /**
