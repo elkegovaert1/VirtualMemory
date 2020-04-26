@@ -532,7 +532,7 @@ public class Controller {
 
             //Via LRU remove pages from all processes in RAM
             //Replace from all processes the same amount of pages to make free place for new process
-            internalReplacementViaLRU(pagesToRemoveFromRAMPerProcess);
+            replacementViaLRUFromAllProcesses(pagesToRemoveFromRAMPerProcess);
 
 
             //create new page table and put each page in RAM
@@ -742,7 +742,7 @@ public class Controller {
     }
 
     //when new process comes in from all the processes a same amount has to be removed of every process
-    public void internalReplacementViaLRU(int numberOfFramesToRemovePerProcess){
+    public void replacementViaLRUFromAllProcesses(int numberOfFramesToRemovePerProcess){
 
         //System.out.println(numberOfFramesToRemovePerProcess);
 
