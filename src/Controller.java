@@ -233,7 +233,7 @@ public class Controller {
                         row.getColumns().get(i).setStyle("");
                     }
                 } else {
-                    if (item.isPresentBit() == true) {
+                    if (item.isPresentBit()) {
                         for(int i=0; i< row.getColumns().size();i++) {
                             row.getColumns().get(i).setStyle("-fx-background-color : green");
                         }
@@ -517,7 +517,6 @@ public class Controller {
     public void startProcess(int processId) {
 
         int numberOfProcessesInRAM = ram.getProcessesInRAM();
-        //System.out.println(numberOfProcessesInRAM);
         //Max 4 processes in RAM
         if(numberOfProcessesInRAM<4){
 
@@ -657,7 +656,6 @@ public class Controller {
             realAdress = 4096*frameNumber + offsetInPage;
 
             //change access time
-            //System.out.println(timer);
             ram.setPageTablePageAccessTime(processID, pageNumber, timer);
 
         }
@@ -707,7 +705,6 @@ public class Controller {
             realAdress = 4096*frameNumber + offsetInPage;
 
             //change access time
-            //System.out.println(timer);
             ram.setPageTablePageAccessTime(processID, pageNumber, timer);
             ram.getPageTables().get(processID).get(pageNumber).setModifyBit(true);
 
@@ -743,8 +740,6 @@ public class Controller {
 
     //when new process comes in from all the processes a same amount has to be removed of every process
     public void replacementViaLRUFromAllProcesses(int numberOfFramesToRemovePerProcess){
-
-        //System.out.println(numberOfFramesToRemovePerProcess);
 
         Map<Integer, List<TableEntry>> pageTables = ram.getPageTables();
 
