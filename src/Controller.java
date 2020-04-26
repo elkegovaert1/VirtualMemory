@@ -443,28 +443,28 @@ public class Controller {
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //GROEN OF ROOD
             //Nog een comment
-        pageTable.setRowFactory(row -> new TableRow<TableEntry>(){
-            @Override
-            public void updateItem(TableEntry item, boolean empty){
-                super.updateItem(item, empty);
+            pageTable.setRowFactory(row -> new TableRow<TableEntry>(){
+                @Override
+                public void updateItem(TableEntry item, boolean empty){
+                    super.updateItem(item, empty);
 
-                if (item == null || empty) {
-                    for(int i=0; i< row.getColumns().size();i++) {
-                        row.getColumns().get(i).setStyle("");
+                    if (item == null || empty) {
+                        for(int i=0; i< row.getColumns().size();i++) {
+                            row.getColumns().get(i).setStyle("");
+                        }
+                    } else {
+                        if (item.isPresentBit() == true) {
+                            for(int i=0; i< row.getColumns().size();i++) {
+                                row.getColumns().get(i).setStyle("-fx-background-color : green");
+                            }
+                        } else {
+                            for(int i=0; i< row.getColumns().size();i++) {
+                                row.getColumns().get(i).setStyle("-fx-background-color : red");
+                            }
+                        }
                     }
-                } else {
-                   if (item.isPresentBit() == true) {
-                       for(int i=0; i< row.getColumns().size();i++) {
-                           row.getColumns().get(i).setStyle("-fx-background-color : green");
-                       }
-                   } else {
-                       for(int i=0; i< row.getColumns().size();i++) {
-                           row.getColumns().get(i).setStyle("-fx-background-color : red");
-                       }
-                   }
                 }
-            }
-        });
+            });
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         indexNextInstruction++;
@@ -631,23 +631,11 @@ public class Controller {
         netvirtadrLabel.setText("---");
         netinstructieLabel.setText("---");
 
-        //show RAM table
-        //ObservableList<Page> ramTable = FXCollections.observableArrayList();
-        //Page[] tablePage = ram.getFrameArray();
+        //reset RAM Table
+        RAMTable.setItems(null);
 
-        //ramTable.addAll(tablePage);
-        RAMTable.refresh();
-        //RAMTable.setItems(ramTable);
-
-        //show Page Table of current running process
-        //ObservableList<TableEntry> pageTableOfProcess = FXCollections.observableArrayList();
-        //List<TableEntry> table = ram.getPageTables().get(processID);
-
-        //if(table!=null){
-         //   pageTableOfProcess.addAll(table);
-        //}
-        pageTable.refresh();
-        //pageTable.setItems(pageTableOfProcess);
+        //reset Page Table
+        pageTable.setItems(null);
 
     }
 

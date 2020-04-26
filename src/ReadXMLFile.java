@@ -22,9 +22,9 @@ public class ReadXMLFile {
         // ELKE
         //File xmlFile = new File("C:\\Users\\elkeg\\IdeaProjects\\VirtualMemory\\"+bestandnaam);
         // GLENN
-        // File xmlFile = new File("C:\\Users\\glenn\\IntelliJ-workspace\\VirtualMemory\\"+bestandnaam);
+        File xmlFile = new File("C:\\Users\\glenn\\IntelliJ-workspace\\VirtualMemory\\"+bestandnaam);
         // ARNE
-        File xmlFile = new File("C:\\Users\\reyni\\IdeaProjects\\VirtualMemory\\"+bestandnaam);
+        // File xmlFile = new File("C:\\Users\\reyni\\IdeaProjects\\VirtualMemory\\"+bestandnaam);
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(xmlFile);
