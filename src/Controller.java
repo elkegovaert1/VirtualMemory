@@ -442,6 +442,7 @@ public class Controller {
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
             //GROEN OF ROOD
+            //Nog een comment
         pageTable.setRowFactory(row -> new TableRow<TableEntry>(){
             @Override
             public void updateItem(TableEntry item, boolean empty){
