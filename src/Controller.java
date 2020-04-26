@@ -1,3 +1,6 @@
+//Glenn Groothuis
+//Elke Govaert
+//Arne Reyniers
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -26,10 +29,10 @@ public class Controller {
     private Label timerLabel;
 
     @FXML
-    public Label aantalWritesLabel;
+    public Label RAMToPersistentLabel;
 
     @FXML
-    public Label aantalReadsLabel;
+    public Label persistentToRAMLabel;
 
     //Labels for just performed instruction
     @FXML
@@ -104,7 +107,6 @@ public class Controller {
     //Integer for the amount of instruction
     private int amountOfInstruction = 0;
 
-
     //List 1 of instructions
     List<Instruction> instructions1;
 
@@ -130,7 +132,7 @@ public class Controller {
     //Start at instruction 0;
     private int indexNextInstruction = 0;
 
-    //When starting the application populate all the Lists
+    //When starting the application populate all the Lists And initialize Tables
     public void initializeList1(List<Instruction> instructions) {
         instructions1 = instructions;
 
@@ -138,7 +140,17 @@ public class Controller {
         instructionsGlob = instructions1;
         persistentToRAM = 0;
         RAMToPersistent = 0;
+    }
 
+    public void initializeList2(List<Instruction> instructions) {
+        instructions2 = instructions;
+    }
+
+    public void initializeList3(List<Instruction> instructions) {
+        instructions3 = instructions;
+    }
+
+    public void initializeTables(){
         // Set up the RAM table
         RAMFrameCol.setCellValueFactory(
                 new PropertyValueFactory<Page,Integer>("frameNumber")
@@ -166,18 +178,78 @@ public class Controller {
         PTPBCol.setCellValueFactory(
                 new PropertyValueFactory<Page,Boolean>("presentBit")
         );
-    }
 
-    public void initializeList2(List<Instruction> instructions) {
-        instructions2 = instructions;
-    }
+        String [] colourArray1 = {
+                "-fx-background-color : #f25f16",
+                "-fx-background-color : #f2169a",
+                "-fx-background-color : #16f2e7",
+                "-fx-background-color : #f2c216",
+                "-fx-background-color : #7916f2",
+                "-fx-background-color : #acf216",
+                "-fx-background-color : #67f216",
+                "-fx-background-color : #16f242",
+                "-fx-background-color : #16f2b4",
+                "-fx-background-color : #f29e16",
+                "-fx-background-color : #16cdf2",
+                "-fx-background-color : #1696f2",
+                "-fx-background-color : #1628f2",
+                "-fx-background-color : #4d16f2",
+                "-fx-background-color : #e7f216",
+                "-fx-background-color : #ac16f2",
+                "-fx-background-color : #f216ee",
+                "-fx-background-color : #637364",
+                "-fx-background-color : #eb2e21",
+                "-fx-background-color : #ffffff"
+        };
 
-    public void initializeList3(List<Instruction> instructions) {
-        instructions3 = instructions;
+        //Colors for rows per process
+        RAMTable.setRowFactory(row -> new TableRow<Page>(){
+            @Override
+            public void updateItem(Page item, boolean empty){
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    for(int i=0; i< row.getColumns().size();i++) {
+                        row.getColumns().get(i).setStyle("");
+                    }
+                } else {
+                    int kleur = item.getProcessId();
+
+                    //We apply now the changes in all the cells of the row
+                    for(int i=0; i< row.getColumns().size();i++) {
+                        row.getColumns().get(i).setStyle(colourArray1[kleur]);
+                    }
+                }
+            }
+        });
+
+        //GROEN OF ROOD
+        pageTable.setRowFactory(row -> new TableRow<TableEntry>(){
+            @Override
+            public void updateItem(TableEntry item, boolean empty){
+                super.updateItem(item, empty);
+
+                if (item == null || empty) {
+                    for(int i=0; i< row.getColumns().size();i++) {
+                        row.getColumns().get(i).setStyle("");
+                    }
+                } else {
+                    if (item.isPresentBit() == true) {
+                        for(int i=0; i< row.getColumns().size();i++) {
+                            row.getColumns().get(i).setStyle("-fx-background-color : green");
+                        }
+                    } else {
+                        for(int i=0; i< row.getColumns().size();i++) {
+                            row.getColumns().get(i).setStyle("-fx-background-color : red");
+                        }
+                    }
+                }
+            }
+        });
     }
 
     @FXML //Execute one instruction and update the view
     void executeOneInstruction(ActionEvent event) {
+
         if(timer+1<instructionsGlob.size()){
 
         //Timer + 1
@@ -203,6 +275,7 @@ public class Controller {
             netoffsetlabel.setText("Geen");
             netreadrLabel.setText("Geen");
 
+            //show labels next instruction
             volgprocessidLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getProcessID()));
             volginstructieLabel.setText(instructionsGlob.get(virtualAddressInstruction+1).getOperation());
             if (instructionsGlob.get(virtualAddressInstruction+1).getAdress() == 0) {
@@ -213,56 +286,12 @@ public class Controller {
         }
         else if(operation.equals("Read")){
 
-            int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
-            int offsetInPage = virtualAdress-pageNumber*4096;
-
-            //See if page is in RAM
-            List<TableEntry> pageTable = ram.getPageTables().get(processID);
-
-            boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
-
-            int frameNumber = -1;
-            int realAdress = -1;
-
-            if(pageIsInRAM){
-                frameNumber = pageTable.get(pageNumber).getFrameNumber();
-                realAdress = 4096*frameNumber + offsetInPage;
-
-                //change access time
-                //System.out.println(timer);
-                ram.setPageTablePageAccessTime(processID, pageNumber, timer);
-
-            }
-            else{
-                //via RLU load page in RAM and remove one
-                //first remove LRU Page
-                replacementViaLRU(processID);
-                RAMToPersistent++;
-
-                //move page to free place in RAM
-                persistentToRAM++;
-                //Adjust page Table
-                for(int i=0;i<ram.getFrameArray().length;i++){
-                    if(ram.getFrameArray()[i]==null){
-                        ram.getFrameArray()[i]=new Page(i,processID,pageNumber);
-                        pageTable.get(pageNumber).setPresentBit(true);
-                        pageTable.get(pageNumber).setFrameNumber(i);
-                        pageTable.get(pageNumber).setLastAccessTime(timer);
-
-
-                        frameNumber = pageTable.get(pageNumber).getFrameNumber();
-                        realAdress = 4096*frameNumber + offsetInPage;
-                    }
-                }
-            }
+            read(processID, virtualAdress);
 
             //show labels current instruction
             netProcessIDLabel.setText(String.valueOf(processID));
             netinstructieLabel.setText(operation);
             netvirtadrLabel.setText(String.valueOf(virtualAdress));
-            netframeLabel.setText(String.valueOf(frameNumber));
-            netoffsetlabel.setText(String.valueOf(offsetInPage));
-            netreadrLabel.setText(String.valueOf(realAdress));
 
             volgprocessidLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getProcessID()));
             volginstructieLabel.setText(instructionsGlob.get(virtualAddressInstruction+1).getOperation());
@@ -274,57 +303,13 @@ public class Controller {
         }
         else if(operation.equals("Write")){
 
-            int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
-            int offsetInPage = virtualAdress-pageNumber*4096;
-
-            //See if page is in RAM
-            List<TableEntry> pageTable = ram.getPageTables().get(processID);
-
-            boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
-
-            int frameNumber = -1;
-            int realAdress = -1;
-
-            if(pageIsInRAM){
-                frameNumber = pageTable.get(pageNumber).getFrameNumber();
-                realAdress = 4096*frameNumber + offsetInPage;
-
-                //change access time
-                //System.out.println(timer);
-                ram.setPageTablePageAccessTime(processID, pageNumber, timer);
-                ram.getPageTables().get(processID).get(pageNumber).setModifyBit(true);
-
-            }
-            else{
-                //via RLU load page in RAM and remove one
-                //first remove LRU Page
-                replacementViaLRU(processID);
-                RAMToPersistent++;
-
-                //move page to free place in RAM
-                persistentToRAM++;
-                //Adjust page Table
-                for(int i=0;i<ram.getFrameArray().length;i++){
-                    if(ram.getFrameArray()[i]==null){
-                        ram.getFrameArray()[i]=new Page(i,processID,pageNumber);
-                        pageTable.get(pageNumber).setPresentBit(true);
-                        pageTable.get(pageNumber).setFrameNumber(i);
-                        pageTable.get(pageNumber).setLastAccessTime(timer);
-                        pageTable.get(pageNumber).setModifyBit(true);
-
-                        frameNumber = pageTable.get(pageNumber).getFrameNumber();
-                        realAdress = 4096*frameNumber + offsetInPage;
-                    }
-                }
-            }
+            write(processID, virtualAdress);
 
             //show labels current instruction
             netProcessIDLabel.setText(String.valueOf(processID));
             netinstructieLabel.setText(operation);
             netvirtadrLabel.setText(String.valueOf(virtualAdress));
-            netframeLabel.setText(String.valueOf(frameNumber));
-            netoffsetlabel.setText(String.valueOf(offsetInPage));
-            netreadrLabel.setText(String.valueOf(realAdress));
+
 
             volgprocessidLabel.setText(String.valueOf(instructionsGlob.get(virtualAddressInstruction + 1).getProcessID()));
             volginstructieLabel.setText(instructionsGlob.get(virtualAddressInstruction+1).getOperation());
@@ -362,13 +347,13 @@ public class Controller {
         }
 
         //show timer value
-        timerLabel.setText(String.valueOf(timer));
+        timerLabel.setText(String.valueOf(timer+1));
 
         //show number of writes to RAM
-        aantalWritesLabel.setText(String.valueOf(persistentToRAM));
+        RAMToPersistentLabel.setText(String.valueOf(RAMToPersistent));
 
         //show number of reads from RAM
-        aantalReadsLabel.setText(String.valueOf(RAMToPersistent));
+        persistentToRAMLabel.setText(String.valueOf(persistentToRAM));
 
         //show RAM table
         ObservableList<Page> ramTable = FXCollections.observableArrayList();
@@ -378,56 +363,10 @@ public class Controller {
         RAMTable.refresh();
         RAMTable.setItems(ramTable);
 
-        String [] colourArray1 = {
-                "-fx-background-color : #f25f16",
-                "-fx-background-color : #f2169a",
-                "-fx-background-color : #16f2e7",
-                "-fx-background-color : #f2c216",
-                "-fx-background-color : #7916f2",
-                "-fx-background-color : #acf216",
-                "-fx-background-color : #67f216",
-                "-fx-background-color : #16f242",
-                "-fx-background-color : #16f2b4",
-                "-fx-background-color : #f29e16",
-                "-fx-background-color : #16cdf2",
-                "-fx-background-color : #1696f2",
-                "-fx-background-color : #1628f2",
-                "-fx-background-color : #4d16f2",
-                "-fx-background-color : #e7f216",
-                "-fx-background-color : #ac16f2",
-                "-fx-background-color : #f216ee",
-                "-fx-background-color : #637364",
-                "-fx-background-color : #eb2e21",
-                "-fx-background-color : #ffffff"
-        };
-        RAMTable.setRowFactory(row -> new TableRow<Page>(){
-            @Override
-            public void updateItem(Page item, boolean empty){
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    for(int i=0; i< row.getColumns().size();i++) {
-                        row.getColumns().get(i).setStyle("");
-                    }
-                } else {
-                    int kleur = item.getProcessId();
-
-                    //We apply now the changes in all the cells of the row
-                    for(int i=0; i< row.getColumns().size();i++) {
-                        row.getColumns().get(i).setStyle(colourArray1[kleur]);
-                    }
-                }
-            }
-        });
-
-
-            //show Page Table of current running process
+        //show Page Table of current running process
         ObservableList<TableEntry> pageTableOfProcess = FXCollections.observableArrayList();
         List<TableEntry> table = ram.getPageTables().get(processID);
-        /**
-        for(int i=0;i<table.size();i++){
-            System.out.println(table.get(i));
-        }
-        **/
+
         if(table!=null){
             pageTableOfProcess.addAll(table);
         }
@@ -435,37 +374,10 @@ public class Controller {
         pageTable.setItems(pageTableOfProcess);
 
         if (instructionsGlob.get(indexNextInstruction).getOperation().equals("Terminate")) {
-            pagetableLabel.setText("Page table leeg door terminate operatie");
+            pagetableLabel.setText("Page table leeg wegens terminatie process");
         } else {
             pagetableLabel.setText("Page table van process: " + instructionsGlob.get(indexNextInstruction).getProcessID());
         }
-
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-            //GROEN OF ROOD
-            //Nog een comment
-            pageTable.setRowFactory(row -> new TableRow<TableEntry>(){
-                @Override
-                public void updateItem(TableEntry item, boolean empty){
-                    super.updateItem(item, empty);
-
-                    if (item == null || empty) {
-                        for(int i=0; i< row.getColumns().size();i++) {
-                            row.getColumns().get(i).setStyle("");
-                        }
-                    } else {
-                        if (item.isPresentBit() == true) {
-                            for(int i=0; i< row.getColumns().size();i++) {
-                                row.getColumns().get(i).setStyle("-fx-background-color : green");
-                            }
-                        } else {
-                            for(int i=0; i< row.getColumns().size();i++) {
-                                row.getColumns().get(i).setStyle("-fx-background-color : red");
-                            }
-                        }
-                    }
-                }
-            });
-        /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
         indexNextInstruction++;
 
@@ -491,71 +403,10 @@ public class Controller {
                 startProcess(processID);
             }
             else if(operation.equals("Read")){
-
-                int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
-
-                //See if page is in RAM
-                List<TableEntry> pageTable = ram.getPageTables().get(processID);
-
-                boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
-
-                if(pageIsInRAM){
-                    //change access time
-                    ram.setPageTablePageAccessTime(processID, pageNumber, timer);
-                }
-                else{
-                    //via RLU load page in RAM and remove one
-                    //first remove LRU Page
-                    replacementViaLRU(processID);
-                    RAMToPersistent++;
-
-                    //move page to free place in RAM
-                    persistentToRAM++;
-                    //Adjust page Table
-                    for(int i=0;i<ram.getFrameArray().length;i++){
-                        if(ram.getFrameArray()[i]==null){
-                            ram.getFrameArray()[i]=new Page(i,processID,pageNumber);
-                            pageTable.get(pageNumber).setPresentBit(true);
-                            pageTable.get(pageNumber).setFrameNumber(i);
-                            pageTable.get(pageNumber).setLastAccessTime(timer);
-                        }
-                    }
-                }
+                read(processID, virtualAdress);
             }
             else if(operation.equals("Write")){
-
-                int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
-
-                //See if page is in RAM
-                List<TableEntry> pageTable = ram.getPageTables().get(processID);
-                boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
-
-                if(pageIsInRAM){
-
-                    //change access time
-                    ram.setPageTablePageAccessTime(processID, pageNumber, timer);
-                    ram.getPageTables().get(processID).get(pageNumber).setModifyBit(true);
-
-                }
-                else{
-                    //via RLU load page in RAM and remove one
-                    //first remove LRU Page
-                    replacementViaLRU(processID);
-                    RAMToPersistent++;
-
-                    //move page to free place in RAM
-                    persistentToRAM++;
-                    //Adjust page Table
-                    for(int i=0;i<ram.getFrameArray().length;i++){
-                        if(ram.getFrameArray()[i]==null){
-                            ram.getFrameArray()[i]=new Page(i,processID,pageNumber);
-                            pageTable.get(pageNumber).setPresentBit(true);
-                            pageTable.get(pageNumber).setFrameNumber(i);
-                            pageTable.get(pageNumber).setLastAccessTime(timer);
-                            pageTable.get(pageNumber).setModifyBit(true);
-                        }
-                    }
-                }
+                write(processID, virtualAdress);
             }
             else if(operation.equals("Terminate")){
 
@@ -578,13 +429,13 @@ public class Controller {
 
             if(timer == instructionsGlob.size()-1) {
                 //show timer value
-                timerLabel.setText(String.valueOf(timer));
+                timerLabel.setText(String.valueOf(timer+1));
 
                 //show number of writes to RAM
-                aantalWritesLabel.setText(String.valueOf(persistentToRAM));
+                RAMToPersistentLabel.setText(String.valueOf(persistentToRAM));
 
                 //show number of reads from RAM
-                aantalReadsLabel.setText(String.valueOf(RAMToPersistent));
+                persistentToRAMLabel.setText(String.valueOf(RAMToPersistent));
             }
 
             //show RAM table
@@ -616,13 +467,13 @@ public class Controller {
         persistentToRAM = 0;
 
         //show timer value
-        timerLabel.setText(String.valueOf(timer));
+        timerLabel.setText(String.valueOf(timer+1));
 
         //show number of writes to RAM
-        aantalWritesLabel.setText(String.valueOf(persistentToRAM));
+        RAMToPersistentLabel.setText(String.valueOf(persistentToRAM));
 
         //show number of reads from RAM
-        aantalReadsLabel.setText(String.valueOf(RAMToPersistent));
+        persistentToRAMLabel.setText(String.valueOf(RAMToPersistent));
 
         //reset labels
         netreadrLabel.setText("---");
@@ -786,6 +637,108 @@ public class Controller {
 
         }
 
+    }
+
+    public void read(int processID, int virtualAdress){
+
+        int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
+        int offsetInPage = virtualAdress-pageNumber*4096;
+
+        //See if page is in RAM
+        List<TableEntry> pageTable = ram.getPageTables().get(processID);
+
+        boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
+
+        int frameNumber = -1;
+        int realAdress = -1;
+
+        if(pageIsInRAM){
+            frameNumber = pageTable.get(pageNumber).getFrameNumber();
+            realAdress = 4096*frameNumber + offsetInPage;
+
+            //change access time
+            //System.out.println(timer);
+            ram.setPageTablePageAccessTime(processID, pageNumber, timer);
+
+        }
+        else{
+            //via RLU load page in RAM and remove one
+            //first remove LRU Page
+            replacementViaLRU(processID);
+            RAMToPersistent++;
+
+            //move page to free place in RAM
+            persistentToRAM++;
+            //Adjust page Table
+            for(int i=0;i<ram.getFrameArray().length;i++){
+                if(ram.getFrameArray()[i]==null){
+                    ram.getFrameArray()[i]=new Page(i,processID,pageNumber);
+                    pageTable.get(pageNumber).setPresentBit(true);
+                    pageTable.get(pageNumber).setFrameNumber(i);
+                    pageTable.get(pageNumber).setLastAccessTime(timer);
+
+
+                    frameNumber = pageTable.get(pageNumber).getFrameNumber();
+                    realAdress = 4096*frameNumber + offsetInPage;
+                }
+            }
+        }
+
+        //show labels current instruction
+        netframeLabel.setText(String.valueOf(frameNumber));
+        netoffsetlabel.setText(String.valueOf(offsetInPage));
+        netreadrLabel.setText(String.valueOf(realAdress));
+    }
+
+    public void write(int processID, int virtualAdress) {
+        int pageNumber = givePageNumberOfVirtualAdress(virtualAdress);
+        int offsetInPage = virtualAdress-pageNumber*4096;
+
+        //See if page is in RAM
+        List<TableEntry> pageTable = ram.getPageTables().get(processID);
+
+        boolean pageIsInRAM = pageTable.get(pageNumber).isPresentBit();
+
+        int frameNumber = -1;
+        int realAdress = -1;
+
+        if(pageIsInRAM){
+            frameNumber = pageTable.get(pageNumber).getFrameNumber();
+            realAdress = 4096*frameNumber + offsetInPage;
+
+            //change access time
+            //System.out.println(timer);
+            ram.setPageTablePageAccessTime(processID, pageNumber, timer);
+            ram.getPageTables().get(processID).get(pageNumber).setModifyBit(true);
+
+        }
+        else{
+            //via RLU load page in RAM and remove one
+            //first remove LRU Page
+            replacementViaLRU(processID);
+            RAMToPersistent++;
+
+            //move page to free place in RAM
+            persistentToRAM++;
+            //Adjust page Table
+            for(int i=0;i<ram.getFrameArray().length;i++){
+                if(ram.getFrameArray()[i]==null){
+                    ram.getFrameArray()[i]=new Page(i,processID,pageNumber);
+                    pageTable.get(pageNumber).setPresentBit(true);
+                    pageTable.get(pageNumber).setFrameNumber(i);
+                    pageTable.get(pageNumber).setLastAccessTime(timer);
+                    pageTable.get(pageNumber).setModifyBit(true);
+
+                    frameNumber = pageTable.get(pageNumber).getFrameNumber();
+                    realAdress = 4096*frameNumber + offsetInPage;
+                }
+            }
+        }
+
+        //show labels current instruction
+        netframeLabel.setText(String.valueOf(frameNumber));
+        netoffsetlabel.setText(String.valueOf(offsetInPage));
+        netreadrLabel.setText(String.valueOf(realAdress));
     }
 
     //when new process comes in from all the processes a same amount has to be removed of every process

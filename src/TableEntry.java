@@ -1,3 +1,7 @@
+//Glenn Groothuis
+//ELke Govaert
+//Arne Reyniers
+//Page Table Entry
 public class TableEntry {
 
     private int pageNumber;

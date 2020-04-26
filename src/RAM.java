@@ -1,11 +1,12 @@
+//Glenn Groothuis
+//ELke Govaert
+//Arne Reyniers
 import java.util.*;
 
 public class RAM {
     //Page Tables
     //Mapping of processId on List<TableEntry> pagetable
     private Map<Integer, List<TableEntry>> pageTables;
-    //processes that have been in ram => keeps amount of writes and reads from and to persistent memory
-    private List<Process> processList;
     private Page[] frameArray;
     private int frameCount;
     private int processesInRAM;
@@ -13,7 +14,6 @@ public class RAM {
     public RAM(int fc) {
         this.frameCount = fc;
         pageTables = new HashMap<Integer, List<TableEntry>>();
-        processList = new ArrayList<>();
         frameArray = new Page[12];
         processesInRAM = 0;
     }
@@ -28,14 +28,6 @@ public class RAM {
 
     public void setPageTables(Map<Integer, List<TableEntry>> pageTables) {
         this.pageTables = pageTables;
-    }
-
-    public List<Process> getProcessList() {
-        return processList;
-    }
-
-    public void setProcessList(List<Process> processList) {
-        this.processList = processList;
     }
 
     public Page[] getFrameArray() {

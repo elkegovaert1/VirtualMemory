@@ -1,3 +1,6 @@
+//Glenn Groothuis
+//ELke Govaert
+//Arne Reyniers
 public class Instruction {
     private int processID;
     private String operation;

@@ -1,3 +1,6 @@
+//Glenn Groothuis
+//ELke Govaert
+//Arne Reyniers
 public class Page {
     private int frameNumber;
     private int processId;

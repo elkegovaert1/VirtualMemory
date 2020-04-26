@@ -1,4 +1,6 @@
-// deadline: 27 april 2020
+//Glenn Groothuis
+//ELke Govaert
+//Arne Reyniers
 
 import org.xml.sax.SAXException;
 
@@ -35,6 +37,7 @@ public class Main extends Application {
         controller.initializeList1(instructions1);
         controller.initializeList2(instructions2);
         controller.initializeList3(instructions3);
+        controller.initializeTables();
         ;
     }
 

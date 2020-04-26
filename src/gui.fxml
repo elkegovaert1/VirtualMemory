@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 <?import java.lang.*?>
 <?import javafx.scene.control.*?>
@@ -9,22 +10,23 @@
     <children>
         <AnchorPane prefHeight="628.0" prefWidth="1100.0">
             <children>
-                <TitledPane fx:id="Algemeen" animated="false" layoutX="842.0" layoutY="15.0" prefHeight="135.0" prefWidth="230.0" text="Algemeen">
+                <TitledPane fx:id="Algemeen" animated="false" layoutX="842.0" layoutY="15.0" prefHeight="168.0" prefWidth="230.0" text="Algemeen">
                     <content>
-                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="200.0">
+                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="128.0" prefWidth="228.0">
                             <children>
                                 <Label layoutX="7.0" layoutY="10.0" text="Timer" />
                                 <Label fx:id="timerLabel" layoutX="140.0" layoutY="10.0" text="---" />
-                                <Label layoutX="5.0" layoutY="41.0" prefHeight="21.0" prefWidth="128.0" text="Persistent naar RAM">
+                                <Label layoutX="6.0" layoutY="75.0" prefHeight="21.0" prefWidth="128.0" text="Persistent naar RAM">
                            <font>
                               <Font size="14.0" />
                            </font></Label>
-                                <Label layoutX="7.0" layoutY="71.0" text="RAM naar Persistent">
+                                <Label layoutX="7.0" layoutY="102.0" text="RAM naar Persistent">
                            <font>
                               <Font size="14.0" />
                            </font></Label>
-                                <Label fx:id="aantalWritesLabel" layoutX="140.0" layoutY="40.0" text="---" />
-                                <Label fx:id="aantalReadsLabel" layoutX="140.0" layoutY="70.0" text="---" />
+                                <Label fx:id="persistentToRAMLabel" layoutX="140.0" layoutY="75.0" text="---" />
+                                <Label fx:id="RAMToPersistentLabel" layoutX="140.0" layoutY="102.0" text="---" />
+                        <Label layoutX="93.0" layoutY="41.0" text="Swaps" />
                             </children>
                         </AnchorPane>
                     </content>

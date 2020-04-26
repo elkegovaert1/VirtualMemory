@@ -1,3 +1,6 @@
+//Glenn Groothuis
+//ELke Govaert
+//Arne Reyniers
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +28,7 @@ public class ReadXMLFile {
         File xmlFile = new File("C:\\Users\\glenn\\IntelliJ-workspace\\VirtualMemory\\"+bestandnaam);
         // ARNE
         // File xmlFile = new File("C:\\Users\\reyni\\IdeaProjects\\VirtualMemory\\"+bestandnaam);
+
         DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
         DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
         Document doc = dBuilder.parse(xmlFile);
